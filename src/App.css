@@ -1,0 +1,63 @@
+/* I like this https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
+.parent {
+  display: flex;
+}
+
+.leftSide {
+
+}
+
+.buttonSpace {
+  width: 40%;
+  background-color: yellow;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.chordButton {
+  height: 55px;
+  width: 40px;
+  background-color: white;
+  margin: 10px 10px 10px 10px;
+}
+
+.barSpace {
+  width: 10%;
+  background-color: white;
+}
+
+#touchBarUL {
+  height: 100%;
+  background-color: red;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+#touchBarUL li {
+  height: 10%;
+  width: 100%;
+  border: solid;
+  border-width: 1px 1px 0px 1px;
+}
+
+#touchBarUL li.firstBarItem {
+  border: solid;
+  border-width: 1px 1px 1px 1px;
+}
+
+.stopBar {
+  width: 5%;
+  background-color: red;
+}
+
+.stopButton {
+  width: 100%;
+  background-color: orange;
+  margin-top: 20px;
+}
