@@ -1,4 +1,6 @@
 /* I like this https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
+
+/*** Parents ***/
 .top {
   display: flex;
   justify-content: center;
@@ -8,12 +10,13 @@
 
 .parent {
   display: flex;
-  height: 450px;
+  height: 70%;
   width: 85%;
   background-color: blue;
   margin-right: 70px;
 }
 
+/*** Left Side ***/
 .leftSide {
   display: flex;
   flex-direction: column;
@@ -29,23 +32,55 @@
   height: 50%;
 }
 
+#memoryButton {
+  background-color: yellow;
+  height: 45%;
+  width: 10%;
+  margin-top: 20px;
+  margin-left: 40px;
+}
+
+.upButton {
+  background-color: white;
+  height: 45%;
+  width: 10%;
+  margin-left: 15px;
+}
+
+.downButton {
+  background-color: white;
+  height: 45%;
+  width: 10%;
+  margin-left: 40px;
+}
+
+.rhythmButton {
+  background-color: white;
+  height: 40%;
+  width: 10%;
+  margin-left: 5px;
+  margin-top: 15px;
+}
+
+#firstRhythmButton {
+  background-color: white;
+  height: 40%;
+  width: 10%;
+  margin-left: 40px;
+}
+
+/*** Button Space ***/
 .buttonSpace {
   width: 45%;
   background-color: yellow;
 }
-
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
-
+/*** Bar Space ***/
 .barSpace {
   width: 7%;
   background-color: white;
 }
 
+/*** Stop bar ***/
 .stopBar {
   margin-left: 2px;
   width: 10%;
@@ -53,9 +88,16 @@ ul {
 }
 
 .stopButton {
-  width: 100%;
   background-color: white;
-  height: 50px;
-  width: 40px;
+  height: 10%;
+  width: 30%;
   margin: 30px 0px 0px 30px;
+}
+
+/*** General ***/
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }

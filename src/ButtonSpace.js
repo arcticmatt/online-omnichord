@@ -2,7 +2,7 @@ import React from 'react';
 import './ButtonSpace.css';
 
 const NUM_BUTTONS = 9;
-const MARGINS = ['0px', '10px', '20px'];
+const MARGINS = ['40px', '50px', '60px'];
 
 export default function ButtonSpace(props) {
   return (
@@ -22,7 +22,7 @@ function ButtonRow(props) {
   const keyRow = keys.slice(begin, end);
 
   const buttons = keyRow.map(key => <ChordButton key={key} chordKey={key} chords={props.chords} />);
-  return <li style={{marginLeft: MARGINS[row]}}>{buttons}</li>;
+  return <li className='buttonLi' style={{marginLeft: MARGINS[row]}}>{buttons}</li>;
 }
 
 function ChordButton(props) {

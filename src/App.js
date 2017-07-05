@@ -8,6 +8,7 @@ import GChord from './audio/g/g-chord.wav';
 
 const TOUCH_BAR_LENGTH = 12;
 
+// TODO: use mp3s instead of wavs
 class App extends Component {
   constructor() {
     super();
@@ -31,11 +32,7 @@ class App extends Component {
     // TODO: right now, only the g-chord is supported
     this.chordSoundMap = _.zipObject(chords, chords.map(c => {
       const a = new Audio(pathToAudio(this.chordPath('g'))) // TODO: remove hardcoded g
-      a.addEventListener('ended', function() {
-        this.currentTime = 0;
-        this.play();
-      }, false);
-      return a;
+      return this.loopAudio(a);
     }));
 
     // TODO: add other notes
@@ -43,13 +40,28 @@ class App extends Component {
       g: _.zipObject(_.range(12), this.notePaths('g').map(p => pathToAudio(p))),
     };
 
+    // Initialize rhythm array
+    // TODO: use different rhythms
+    const rhythmNames = ['rock', 'rock', 'rock', 'rock', 'rock', 'rock'];
+    const rhythmPaths = rhythmNames.map(s => `./rhythm/${s}.wav`);
+    this.rhythms = rhythmPaths.map(p => {
+      const a = new Audio(pathToAudio(p));
+      a.volume = 0;
+      return this.loopAudio(a);
+    });
+    this.rhythms[0].play();
+
     this.state = {
       chords: _.zipObject(keys, Array(keys.length).fill(0)),
+      currentChord: undefined,
       barSelect: Array(TOUCH_BAR_LENGTH).fill(0),
       barAudio: [], // tracks last 12 bar audio objects, used for the stop button
       memory: true,
       chordVolume: 1.0,
       harpVolume: 1.0,
+      rhythmVolume: 0.0,
+      rhythmTempo: 1.0,
+      currentRhythm: this.rhythms[0], // Start with rock rhythm
     };
   }
 
@@ -68,14 +80,14 @@ class App extends Component {
     return (key in this.keyChordMap);
   }
 
-  /* Helper method that determines if a key is a valid touch bar key */
+  /* Helper function that determines if a key is a valid touch bar key */
   isValidTouchKey(key) {
     return (key in _.range(10) || key === '-' || key === '=');
   }
 
-  stopSound(audio) {
-    audio.pause();
-    audio.currentTime = 0;
+  stopSound(a) {
+    a.pause();
+    a.currentTime = 0;
   }
 
   getNewChords(newKey) {
@@ -96,16 +108,21 @@ class App extends Component {
 
   stopChord() {
     // Stop chord
-    const currentKey = this.getCurrentKey();
-    if (currentKey) {
-      const currentChord = this.keyChordMap[currentKey];
-      this.stopSound(this.chordSoundMap[currentChord]);
+    if (this.state.currentChord) {
+      this.stopSound(this.state.currentChord);
     }
     this.setState({ chords: this.getNewChords('invalid key')}); // pass in an invalid key to deselect everything
   }
 
   stopBar() {
     _.forEach(this.state.barAudio, a => a.pause());
+  }
+
+  stopRhythm() {
+    if (this.state.currentRhythm) {
+      this.stopSound(this.state.currentRhythm);
+    }
+    // Don't change the current rhythm
   }
 
   changeVolume(volume, change) {
@@ -117,6 +134,25 @@ class App extends Component {
       return 0;
     }
     return newVolume;
+  }
+
+  changeTempo(tempo, change) {
+    const newTempo = tempo + change;
+    if (newTempo > 3) {
+      return 3;
+    }
+    if (newTempo < .25) {
+      return .25;
+    }
+    return newTempo;
+  }
+
+  loopAudio(a) {
+    a.addEventListener('ended', function() {
+      this.currentTime = 0;
+      this.play();
+    }, false);
+    return a;
   }
 
   /*** Handler functions ***/
@@ -154,7 +190,7 @@ class App extends Component {
     newAudio.play();
 
     // Update state
-    this.setState({ chords: this.getNewChords(newKey) });
+    this.setState({ chords: this.getNewChords(newKey), currentChord: newAudio });
   }
 
   handleTouch(touchKey) {
@@ -178,6 +214,7 @@ class App extends Component {
   handleStopButton() {
     this.stopChord();
     this.stopBar();
+    this.stopRhythm();
   }
 
   handleMemoryButton() {
@@ -188,6 +225,49 @@ class App extends Component {
     }
   }
 
+  // Note: we don't do live adjustments for harp volume, because the notes
+  handleChordVolume(change) {
+    const newVolume = this.changeVolume(this.state.chordVolume, change);
+    let newChord = {};
+    if (this.state.currentChord) {
+      newChord = this.state.currentChord;
+      newChord.volume = newVolume;
+    }
+    this.setState({ chordVolume: newVolume, currentChord: newChord })
+  }
+
+  handleRhythmChange(index) {
+    if (index >= 6) {
+      return;
+    }
+    this.stopRhythm(); // stop current rhythm
+    const newRhythm = this.rhythms[index];
+    newRhythm.volume = this.state.rhythmVolume;
+    newRhythm.play();
+    this.setState({ currentRhythm: newRhythm });
+  }
+
+  // TODO: cut down on duplicate code
+  handleRhythmVolume(change) {
+    const newVolume = this.changeVolume(this.state.rhythmVolume, change);
+    let newRhythm  = {};
+    if (this.state.currentRhythm) {
+      newRhythm = this.state.currentRhythm;
+      newRhythm.volume = newVolume;
+    }
+    this.setState({ rhythmVolume: newVolume, currentRhythm: newRhythm })
+  }
+
+  handleRhythmTempo(change) {
+    const newTempo = this.changeTempo(this.state.rhythmTempo, change);
+    let newRhythm  = {};
+    if (this.state.currentRhythm) {
+      newRhythm = this.state.currentRhythm;
+      newRhythm.playbackRate = newTempo;
+    }
+    this.setState({ rhythmTempo: newTempo , currentRhythm: newRhythm })
+  }
+
   render() {
     return (
       <div className='top'>
@@ -196,22 +276,30 @@ class App extends Component {
             <div style={{backgroundColor: 'orange'}}>
               <ul>
                 <li>
-                  <button onClick={() => this.handleMemoryButton()}>
-                    Memory
+                  <button id='memoryButton' onClick={() => this.handleMemoryButton()}>
+                    M
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => this.setState({ harpVolume: this.changeVolume(this.state.harpVolume, -0.1)})}>
-                    Harp Volume Down
+                  <button
+                    className='downButton'
+                    onClick={() => this.setState({ harpVolume: this.changeVolume(this.state.harpVolume, -0.1)})}>
+                    -
                   </button>
-                  <button onClick={() => this.setState({ harpVolume: this.changeVolume(this.state.harpVolume, 0.1)})}>
-                    Harp Volume Up
+                  <button
+                    className='upButton'
+                    onClick={() => this.setState({ harpVolume: this.changeVolume(this.state.harpVolume, 0.1)})}>
+                    +
                   </button>
-                  <button onClick={() => this.setState({ chordVolume: this.changeVolume(this.state.chordVolume, -0.1)})}>
-                    Chord Volume Down
+                  <button
+                    className='downButton'
+                    onClick={() => this.handleChordVolume(-0.1)}>
+                    -
                   </button>
-                  <button onClick={() => this.setState({ chordVolume: this.changeVolume(this.state.chordVolume, 0.1)})}>
-                    Chord Volume Up
+                  <button
+                    className='upButton'
+                    onClick={() => this.handleChordVolume(0.1)}>
+                    +
                   </button>
                 </li>
               </ul>
@@ -219,18 +307,49 @@ class App extends Component {
             <div style={{backgroundColor: 'red'}}>
               <ul>
                 <li>
-                  <button>Rock</button>
-                  <button>Waltz</button>
-                  <button>Slow Rock</button>
-                  <button>Latin</button>
-                  <button>Fox Trot</button>
-                  <button>Swing</button>
+                  <button
+                    id='firstRhythmButton'
+                    onClick={() => this.handleRhythmChange(0)}
+                  className='rhythmButton'>
+                  1</button>
+                  <button
+                    onClick={() => this.handleRhythmChange(1)}
+                  className='rhythmButton'>
+                  2</button>
+                  <button
+                    onClick={() => this.handleRhythmChange(2)}
+                  className='rhythmButton'>
+                  3</button>
+                  <button
+                    onClick={() => this.handleRhythmChange(3)}
+                  className='rhythmButton'>
+                  4</button>
+                  <button
+                    onClick={() => this.handleRhythmChange(4)}
+                  className='rhythmButton'>
+                  5</button>
+                  <button
+                    onClick={() => this.handleRhythmChange(5)}
+                  className='rhythmButton'>
+                  6</button>
                 </li>
                 <li>
-                  <button>Rhythm Tempo Down</button>
-                  <button>Rhythm Tempo Up</button>
-                  <button>Rhythm Volume Down</button>
-                  <button>Rhythm Volume Up</button>
+                  <button
+                    onClick={() => this.handleRhythmTempo(-0.1)}
+                  className='downButton'>
+                  -</button>
+                  <button
+                    onClick={() => this.handleRhythmTempo(0.1)}
+                  className='upButton'>
+                  +</button>
+                  <button
+                    onClick={() => this.handleRhythmVolume(-0.1)}
+                  className='downButton'>
+                  -</button>
+                  <button
+                    onClick={() => this.handleRhythmVolume(0.1)}
+                  className='upButton'>
+                  +</button>
                 </li>
               </ul>
             </div>
@@ -243,7 +362,7 @@ class App extends Component {
             <TouchBar barSelect={this.state.barSelect} />
           </div>
           <div className='stopBar'>
-            <button className='stopButton' onClick={() => this.handleStopButton()}>Stop</button>
+            <button className='stopButton' onClick={() => this.handleStopButton()}></button>
           </div>
         </div>
       </div>

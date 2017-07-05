@@ -1,6 +1,11 @@
+.buttonLi {
+  height: 11%;
+  width: 100%;
+}
+
 .chordButton {
-  height: 40px;
-  width: 30px;
+  height: 80%;
+  width: 5%;
   background-color: white;
   margin: 10px 10px 10px 10px;
 }
