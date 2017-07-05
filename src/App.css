@@ -24,42 +24,15 @@
 }
 
 ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    height: 100%;
-}
-
-.chordButton {
-  height: 55px;
-  width: 40px;
-  background-color: white;
-  margin: 10px 10px 10px 10px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
 .barSpace {
   width: 10%;
   background-color: white;
-}
-
-#touchBarUL {
-  height: 100%;
-  background-color: red;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-}
-
-#touchBarUL li {
-  height: 10%;
-  width: 100%;
-  border: solid;
-  border-width: 1px 1px 0px 1px;
-}
-
-#touchBarUL li.firstBarItem {
-  border: solid;
-  border-width: 1px 1px 1px 1px;
 }
 
 .stopBar {

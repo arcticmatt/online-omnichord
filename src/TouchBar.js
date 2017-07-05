@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
+import './TouchBar.css';
 
 export default function TouchBar(props) {
   const items = _.rangeRight(12).map(num =>

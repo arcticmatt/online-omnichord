@@ -1,0 +1,19 @@
+#touchBarUL {
+  height: 100%;
+  background-color: red;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+#touchBarUL li {
+  height: 10%;
+  width: 100%;
+  border: solid;
+  border-width: 1px 1px 0px 1px;
+}
+
+#touchBarUL li.firstBarItem {
+  border: solid;
+  border-width: 1px 1px 1px 1px;
+}
