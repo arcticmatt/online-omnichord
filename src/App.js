@@ -190,59 +190,61 @@ class App extends Component {
 
   render() {
     return (
-      <div className='parent' style={{backgroundColor: 'blue'}}>
-        <div className='leftSide'>
-          <div style={{backgroundColor: 'orange'}}>
-            <ul>
-              <li>
-                <button onClick={() => this.handleMemoryButton()}>
-                  Memory
-                </button>
-              </li>
-              <li>
-                <button onClick={() => this.setState({ harpVolume: this.changeVolume(this.state.harpVolume, -0.1)})}>
-                  Harp Volume Down
-                </button>
-                <button onClick={() => this.setState({ harpVolume: this.changeVolume(this.state.harpVolume, 0.1)})}>
-                  Harp Volume Up
-                </button>
-                <button onClick={() => this.setState({ chordVolume: this.changeVolume(this.state.chordVolume, -0.1)})}>
-                  Chord Volume Down
-                </button>
-                <button onClick={() => this.setState({ chordVolume: this.changeVolume(this.state.chordVolume, 0.1)})}>
-                  Chord Volume Up
-                </button>
-              </li>
-            </ul>
+      <div className='top'>
+        <div className='parent'>
+          <div className='leftSide'>
+            <div style={{backgroundColor: 'orange'}}>
+              <ul>
+                <li>
+                  <button onClick={() => this.handleMemoryButton()}>
+                    Memory
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => this.setState({ harpVolume: this.changeVolume(this.state.harpVolume, -0.1)})}>
+                    Harp Volume Down
+                  </button>
+                  <button onClick={() => this.setState({ harpVolume: this.changeVolume(this.state.harpVolume, 0.1)})}>
+                    Harp Volume Up
+                  </button>
+                  <button onClick={() => this.setState({ chordVolume: this.changeVolume(this.state.chordVolume, -0.1)})}>
+                    Chord Volume Down
+                  </button>
+                  <button onClick={() => this.setState({ chordVolume: this.changeVolume(this.state.chordVolume, 0.1)})}>
+                    Chord Volume Up
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div style={{backgroundColor: 'red'}}>
+              <ul>
+                <li>
+                  <button>Rock</button>
+                  <button>Waltz</button>
+                  <button>Slow Rock</button>
+                  <button>Latin</button>
+                  <button>Fox Trot</button>
+                  <button>Swing</button>
+                </li>
+                <li>
+                  <button>Rhythm Tempo Down</button>
+                  <button>Rhythm Tempo Up</button>
+                  <button>Rhythm Volume Down</button>
+                  <button>Rhythm Volume Up</button>
+                </li>
+              </ul>
+            </div>
+            <div style={{backgroundColor: 'green'}}>Power</div>
           </div>
-          <div style={{backgroundColor: 'red'}}>
-            <ul>
-              <li>
-                <button>Rock</button>
-                <button>Waltz</button>
-                <button>Slow Rock</button>
-                <button>Latin</button>
-                <button>Fox Trot</button>
-                <button>Swing</button>
-              </li>
-              <li>
-                <button>Rhythm Tempo Down</button>
-                <button>Rhythm Tempo Up</button>
-                <button>Rhythm Volume Down</button>
-                <button>Rhythm Volume Up</button>
-              </li>
-            </ul>
+          <div className='buttonSpace'>
+            <ButtonSpace keys={_.keys(this.keyChordMap)} chords={this.state.chords} />
           </div>
-          <div style={{backgroundColor: 'green'}}>Power</div>
-        </div>
-        <div className='buttonSpace'>
-          <ButtonSpace keys={_.keys(this.keyChordMap)} chords={this.state.chords} />
-        </div>
-        <div className='barSpace'>
-          <TouchBar barSelect={this.state.barSelect} />
-        </div>
-        <div className='stopBar'>
-          <button className='stopButton' onClick={() => this.handleStopButton()}>Stop</button>
+          <div className='barSpace'>
+            <TouchBar barSelect={this.state.barSelect} />
+          </div>
+          <div className='stopBar'>
+            <button className='stopButton' onClick={() => this.handleStopButton()}>Stop</button>
+          </div>
         </div>
       </div>
     );

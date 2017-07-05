@@ -1,6 +1,12 @@
 .chordButton {
-  height: 55px;
-  width: 40px;
+  height: 40px;
+  width: 30px;
   background-color: white;
   margin: 10px 10px 10px 10px;
+}
+
+#rowList {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }

@@ -2,10 +2,11 @@ import React from 'react';
 import './ButtonSpace.css';
 
 const NUM_BUTTONS = 9;
+const MARGINS = ['0px', '10px', '20px'];
 
 export default function ButtonSpace(props) {
   return (
-    <ul>
+    <ul id='rowList'>
       <ButtonRow keys={props.keys} chords={props.chords} row={0} />
       <ButtonRow keys={props.keys} chords={props.chords} row={1} />
       <ButtonRow keys={props.keys} chords={props.chords} row={2} />
@@ -21,7 +22,7 @@ function ButtonRow(props) {
   const keyRow = keys.slice(begin, end);
 
   const buttons = keyRow.map(key => <ChordButton key={key} chordKey={key} chords={props.chords} />);
-  return <li>{buttons}</li>;
+  return <li style={{marginLeft: MARGINS[row]}}>{buttons}</li>;
 }
 
 function ChordButton(props) {
