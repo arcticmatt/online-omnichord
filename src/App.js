@@ -159,6 +159,12 @@ class App extends Component {
   handleUp(e) {
     if (this.isValidChordKey(e.key) && !this.state.memory) {
       this.stopChord();
+    } else if (this.isValidTouchKey(e.key) && this.state.barSelect.reduce((a, b) => a + b, 0) > 0) {
+      setTimeout(() => {
+        this.setState({
+          barSelect: Array(TOUCH_BAR_LENGTH).fill(0),
+        });
+      }, 200);
     }
   }
 
