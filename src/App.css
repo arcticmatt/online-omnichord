@@ -1,4 +1,5 @@
 /* I like this https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
+/* TODO: make everything relative */
 
 /*** Parents ***/
 .top {
@@ -21,7 +22,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  width: 22%;
+  width: 20%;
 }
 
 .leftSide div {
@@ -32,66 +33,100 @@
   height: 50%;
 }
 
-#memoryButton {
-  background-color: yellow;
+.leftButton {
   height: 45%;
   width: 10%;
+}
+
+#memoryButton {
+  background-color: yellow;
   margin-top: 20px;
-  margin-left: 40px;
+  margin-left: 77%;
 }
 
 .upButton {
-  background-color: white;
-  height: 45%;
-  width: 10%;
-  margin-left: 15px;
+  background-color: rgb(220,220,220);
+  margin-left: 5%;
 }
 
-.downButton {
-  background-color: white;
-  height: 45%;
-  width: 10%;
-  margin-left: 40px;
+.firstDownButton {
+  background-color: rgb(220,220,220);
+  margin-left: 22%;
+}
+
+.secondDownButton {
+  background-color: rgb(220,220,220);
+  margin-left: 15%;
 }
 
 .rhythmButton {
-  background-color: white;
+  background-color: rgb(255,198,198);
   height: 40%;
-  width: 10%;
-  margin-left: 5px;
-  margin-top: 15px;
+  margin-left: 5%;
+  margin-top: 7%;
 }
 
 #firstRhythmButton {
-  background-color: white;
-  height: 40%;
-  width: 10%;
-  margin-left: 40px;
+  background-color: rgb(255,198,198);
+  margin-left: 8%;
 }
 
-/*** Button Space ***/
-.buttonSpace {
+/*** Button Space & Body ***/
+#oBody {
   width: 45%;
+  height: 100%;
+  background-color: orange;
+}
+
+.buttonSpace {
+  margin-top: 17%;
+  margin-left: 5%;
+  width: 100%;
+  height: 50%;
   background-color: yellow;
 }
+
+#oLogo {
+  background-color: gray;
+  height: 33%
+}
+
+/*** Bar container ***/
+#barContainer {
+  height: 75%;
+  width: 13%;
+  background-image: url('./images/touchbar.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  flex-direction: row;
+}
+
+
 /*** Bar Space ***/
 .barSpace {
-  width: 7%;
-  background-color: white;
+  width: 40%;
+  height: 90%;
+  background-color: rgb(0,0,0,0);
+  margin-left: 10%;
+  margin-top: 9.5%;
 }
 
 /*** Stop bar ***/
 .stopBar {
-  margin-left: 2px;
-  width: 10%;
-  background-color: white;
+  margin-left: 5%;
+  height: 100%;
+  width: 20%;
+  background-color: rgb(0,0,0,0);
 }
 
 .stopButton {
   background-color: white;
-  height: 10%;
-  width: 30%;
-  margin: 30px 0px 0px 30px;
+  height: 9%;
+  width: 90%;
+  margin-left: 90%;
+  margin-top: 100%;
 }
 
 /*** General ***/

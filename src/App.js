@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 import ButtonSpace from './ButtonSpace';
 import TouchBar from './TouchBar';
 import './App.css';
-import MySong from './audio/lovestory.mp3';
-import GChord from './audio/g/g-chord.wav';
 
 const TOUCH_BAR_LENGTH = 12;
 
@@ -42,11 +40,12 @@ class App extends Component {
 
     // Initialize rhythm array
     // TODO: use different rhythms
+    const rhythmStartVolume = 0.0;
     const rhythmNames = ['rock', 'rock', 'rock', 'rock', 'rock', 'rock'];
     const rhythmPaths = rhythmNames.map(s => `./rhythm/${s}.wav`);
     this.rhythms = rhythmPaths.map(p => {
       const a = new Audio(pathToAudio(p));
-      a.volume = 0;
+      a.volume = rhythmStartVolume;
       return this.loopAudio(a);
     });
     this.rhythms[0].play();
@@ -59,7 +58,7 @@ class App extends Component {
       memory: true,
       chordVolume: 1.0,
       harpVolume: 1.0,
-      rhythmVolume: 0.0,
+      rhythmVolume: rhythmStartVolume,
       rhythmTempo: 1.0,
       currentRhythm: this.rhythms[0], // Start with rock rhythm
     };
@@ -157,14 +156,19 @@ class App extends Component {
 
   /*** Handler functions ***/
   handleUp(e) {
-    if (this.isValidChordKey(e.key) && !this.state.memory) {
+    const upPosition = '1234567890-='.split('').indexOf(e.key);
+    const currentPosition = this.state.barSelect.indexOf(1);
+    // Last boolean handles case where
+    // 1) User plays chord 'g' (WLOG)
+    // 2) User, while still playing chord 'g', plays chord 'c'
+    // 3) When chord 'c' is played, chord 'g' is stopped. So we don't want to
+    //    double stop it here.
+    if (this.isValidChordKey(e.key) && !this.state.memory && this.getCurrentKey() === e.key) {
       this.stopChord();
-    } else if (this.isValidTouchKey(e.key) && this.state.barSelect.reduce((a, b) => a + b, 0) > 0) {
-      setTimeout(() => {
-        this.setState({
-          barSelect: Array(TOUCH_BAR_LENGTH).fill(0),
-        });
-      }, 200);
+    } else if (this.isValidTouchKey(e.key) && upPosition === currentPosition) { // again, second boolean handles double stopping
+      this.setState({
+        barSelect: Array(TOUCH_BAR_LENGTH).fill(0),
+      });
     }
   }
 
@@ -282,28 +286,27 @@ class App extends Component {
             <div style={{backgroundColor: 'orange'}}>
               <ul>
                 <li>
-                  <button id='memoryButton' onClick={() => this.handleMemoryButton()}>
-                    M
+                  <button className='leftButton' id='memoryButton' onClick={() => this.handleMemoryButton()}>
                   </button>
                 </li>
                 <li>
                   <button
-                    className='downButton'
+                    className='leftButton firstDownButton'
                     onClick={() => this.setState({ harpVolume: this.changeVolume(this.state.harpVolume, -0.1)})}>
                     -
                   </button>
                   <button
-                    className='upButton'
+                    className='leftButton upButton'
                     onClick={() => this.setState({ harpVolume: this.changeVolume(this.state.harpVolume, 0.1)})}>
                     +
                   </button>
                   <button
-                    className='downButton'
+                    className='leftButton secondDownButton'
                     onClick={() => this.handleChordVolume(-0.1)}>
                     -
                   </button>
                   <button
-                    className='upButton'
+                    className='leftButton upButton'
                     onClick={() => this.handleChordVolume(0.1)}>
                     +
                   </button>
@@ -316,59 +319,64 @@ class App extends Component {
                   <button
                     id='firstRhythmButton'
                     onClick={() => this.handleRhythmChange(0)}
-                  className='rhythmButton'>
-                  1</button>
+                  className='leftButton rhythmButton'>
+                  </button>
                   <button
                     onClick={() => this.handleRhythmChange(1)}
-                  className='rhythmButton'>
-                  2</button>
+                  className='leftButton rhythmButton'>
+                  </button>
                   <button
                     onClick={() => this.handleRhythmChange(2)}
-                  className='rhythmButton'>
-                  3</button>
+                  className='leftButton rhythmButton'>
+                  </button>
                   <button
                     onClick={() => this.handleRhythmChange(3)}
-                  className='rhythmButton'>
-                  4</button>
+                  className='leftButton rhythmButton'>
+                  </button>
                   <button
                     onClick={() => this.handleRhythmChange(4)}
-                  className='rhythmButton'>
-                  5</button>
+                  className='leftButton rhythmButton'>
+                  </button>
                   <button
                     onClick={() => this.handleRhythmChange(5)}
-                  className='rhythmButton'>
-                  6</button>
+                  className='leftButton rhythmButton'>
+                  </button>
                 </li>
                 <li>
                   <button
                     onClick={() => this.handleRhythmTempo(-0.1)}
-                  className='downButton'>
+                  className='leftButton firstDownButton'>
                   -</button>
                   <button
                     onClick={() => this.handleRhythmTempo(0.1)}
-                  className='upButton'>
+                  className='leftButton upButton'>
                   +</button>
                   <button
                     onClick={() => this.handleRhythmVolume(-0.1)}
-                  className='downButton'>
+                  className='leftButton secondDownButton'>
                   -</button>
                   <button
                     onClick={() => this.handleRhythmVolume(0.1)}
-                  className='upButton'>
+                  className='leftButton upButton'>
                   +</button>
                 </li>
               </ul>
             </div>
             <div style={{backgroundColor: 'green'}}>Power</div>
           </div>
-          <div className='buttonSpace'>
-            <ButtonSpace keys={_.keys(this.keyChordMap)} chords={this.state.chords} />
+          <div id='oBody'>
+            <div className='buttonSpace'>
+              <ButtonSpace keys={_.keys(this.keyChordMap)} chords={this.state.chords} />
+            </div>
+            <div id='oLogo'>Hello</div>
           </div>
-          <div className='barSpace'>
-            <TouchBar barSelect={this.state.barSelect} />
-          </div>
-          <div className='stopBar'>
-            <button className='stopButton' onClick={() => this.handleStopButton()}></button>
+          <div id='barContainer'>
+            <div className='barSpace'>
+              <TouchBar barSelect={this.state.barSelect} />
+            </div>
+            <div className='stopBar'>
+              <button className='stopButton' onClick={() => this.handleStopButton()}></button>
+            </div>
           </div>
         </div>
       </div>

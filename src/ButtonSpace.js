@@ -2,14 +2,19 @@ import React from 'react';
 import './ButtonSpace.css';
 
 const NUM_BUTTONS = 9;
-const MARGINS = ['40px', '50px', '60px'];
+const MARGINS = ['15%', '16.5%', '17.5%'];
 
 export default function ButtonSpace(props) {
   return (
-    <ul id='rowList'>
-      <ButtonRow keys={props.keys} chords={props.chords} row={0} />
-      <ButtonRow keys={props.keys} chords={props.chords} row={1} />
-      <ButtonRow keys={props.keys} chords={props.chords} row={2} />
+    <ul id='buttonList'>
+      <div id='buttonDiv'>
+        <ul>
+          <li className='dummyLi'></li>
+            <ButtonRow keys={props.keys} chords={props.chords} row={0} />
+          <ButtonRow keys={props.keys} chords={props.chords} row={1} />
+          <ButtonRow keys={props.keys} chords={props.chords} row={2} />
+        </ul>
+      </div>
     </ul>
   );
 }
