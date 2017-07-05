@@ -4,7 +4,18 @@
 }
 
 .leftSide {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 20%;
+}
 
+.leftSide div {
+  height: 100%;
+}
+
+.leftSide li {
+  height: 50%;
 }
 
 .buttonSpace {

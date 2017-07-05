@@ -14,6 +14,7 @@ class App extends Component {
 
     // Key events
     window.onkeydown = e => this.handleDown(e);
+    window.onkeyup = e => this.handleUp(e);
 
     // Arrays to be used for object (map) creation
     const keys = 'qwertyuioasdfghjklzxcvbnm,.';
@@ -46,6 +47,9 @@ class App extends Component {
       chords: _.zipObject(keys, Array(keys.length).fill(0)),
       barSelect: Array(TOUCH_BAR_LENGTH).fill(0),
       barAudio: [], // tracks last 12 bar audio objects, used for the stop button
+      memory: true,
+      chordVolume: 1.0,
+      harpVolume: 1.0,
     };
   }
 
@@ -74,13 +78,6 @@ class App extends Component {
     audio.currentTime = 0;
   }
 
-  stopChord(currentKey) {
-    if (currentKey) {
-      const currentChord = this.keyChordMap[currentKey];
-      this.stopSound(this.chordSoundMap[currentChord]);
-    }
-  }
-
   getNewChords(newKey) {
     // Make new chord array
     const newChords = _.mapValues(this.state.chords, (value, key) => {
@@ -93,7 +90,42 @@ class App extends Component {
     return newChords;
   }
 
+  getCurrentKey() {
+    return _.findKey(this.state.chords, x => x === 1);
+  }
+
+  stopChord() {
+    // Stop chord
+    const currentKey = this.getCurrentKey();
+    if (currentKey) {
+      const currentChord = this.keyChordMap[currentKey];
+      this.stopSound(this.chordSoundMap[currentChord]);
+    }
+    this.setState({ chords: this.getNewChords('invalid key')}); // pass in an invalid key to deselect everything
+  }
+
+  stopBar() {
+    _.forEach(this.state.barAudio, a => a.pause());
+  }
+
+  changeVolume(volume, change) {
+    const newVolume = volume + change;
+    if (newVolume > 1) {
+      return 1;
+    }
+    if (newVolume < 0) {
+      return 0;
+    }
+    return newVolume;
+  }
+
   /*** Handler functions ***/
+  handleUp(e) {
+    if (this.isValidChordKey(e.key) && !this.state.memory) {
+      this.stopChord();
+    }
+  }
+
   /*
    * Delegate functionality to handleChord and handleTouch.
    */
@@ -107,18 +139,18 @@ class App extends Component {
   }
 
   handleChord(newKey) {
-    // Get key of chord that is currently playing
-    const currentKey = _.findKey(this.state.chords, x => x === 1);
+    const currentKey = this.getCurrentKey();
     if (currentKey === newKey) {
       return; // If current key is pressed again, don't pause/stop the sound
     }
 
     // Stop currently playing chord
-    this.stopChord(currentKey);
+    this.stopChord();
 
     // Play new chord
     const newChord = this.keyChordMap[newKey]
     const newAudio = this.chordSoundMap[newChord];
+    newAudio.volume = this.state.chordVolume;
     newAudio.play();
 
     // Update state
@@ -133,6 +165,7 @@ class App extends Component {
 
     // Play new bar sound
     const newAudio = new Audio(this.touchBarMap.g[position]);
+    newAudio.volume = this.state.harpVolume;
     newAudio.play();
 
     // Update state
@@ -143,19 +176,65 @@ class App extends Component {
   }
 
   handleStopButton() {
-    // Stop chord
-    const currentKey = _.findKey(this.state.chords, x => x === 1);
-    this.stopChord(currentKey);
-    this.setState({ chords: this.getNewChords('invalid key')}); // pass in an invalid key to deselect everything
+    this.stopChord();
+    this.stopBar();
+  }
 
-    // Stop bar
-    _.forEach(this.state.barAudio, a => a.pause());
+  handleMemoryButton() {
+    const currentMemory = this.state.memory;
+    this.setState({ memory: !currentMemory});
+    if (currentMemory) {
+      this.stopChord();
+    }
   }
 
   render() {
     return (
       <div className='parent' style={{backgroundColor: 'blue'}}>
-        <div className='leftSide'>Yo</div>
+        <div className='leftSide'>
+          <div style={{backgroundColor: 'orange'}}>
+            <ul>
+              <li>
+                <button onClick={() => this.handleMemoryButton()}>
+                  Memory
+                </button>
+              </li>
+              <li>
+                <button onClick={() => this.setState({ harpVolume: this.changeVolume(this.state.harpVolume, -0.1)})}>
+                  Harp Volume Down
+                </button>
+                <button onClick={() => this.setState({ harpVolume: this.changeVolume(this.state.harpVolume, 0.1)})}>
+                  Harp Volume Up
+                </button>
+                <button onClick={() => this.setState({ chordVolume: this.changeVolume(this.state.chordVolume, -0.1)})}>
+                  Chord Volume Down
+                </button>
+                <button onClick={() => this.setState({ chordVolume: this.changeVolume(this.state.chordVolume, 0.1)})}>
+                  Chord Volume Up
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div style={{backgroundColor: 'red'}}>
+            <ul>
+              <li>
+                <button>Rock</button>
+                <button>Waltz</button>
+                <button>Slow Rock</button>
+                <button>Latin</button>
+                <button>Fox Trot</button>
+                <button>Swing</button>
+              </li>
+              <li>
+                <button>Rhythm Tempo Down</button>
+                <button>Rhythm Tempo Up</button>
+                <button>Rhythm Volume Down</button>
+                <button>Rhythm Volume Up</button>
+              </li>
+            </ul>
+          </div>
+          <div style={{backgroundColor: 'green'}}>Power</div>
+        </div>
         <div className='buttonSpace'>
           <ButtonSpace keys={_.keys(this.keyChordMap)} chords={this.state.chords} />
         </div>
