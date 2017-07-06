@@ -76,7 +76,6 @@ class App extends Component {
   initRhythms(startVolume, pathToAudio) {
     // Initialize rhythm array
     // TODO: use different rhythms
-    const rhythmStartVolume = 0.0;
     const rhythmNames = ['rock', 'rock', 'rock', 'rock', 'rock', 'rock'];
     const rhythmPaths = rhythmNames.map(s => `./rhythm/${s}.wav`);
     this.rhythms = rhythmPaths.map(p => {

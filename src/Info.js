@@ -3,6 +3,8 @@ import './css/Info.css';
 
 // This component is entirely HTML and CSS.
 export default function Info(props) {
+  document.body.margin = 0;
+  document.body.padding = 0;
   return (
     <div id='infoDiv'>
       <div id='headerDiv'>
@@ -22,7 +24,10 @@ export default function Info(props) {
             have guessed, <i>zxcvb... </i> corresponds to the last row of
             buttions, and plays 7th chords. As an example, <i>q</i> plays Eb major, <i>d</i> plays
             F minor, and <i>b</i> plays G7. Clicking the central 27 buttons with
-            the mouse doesn't do anything.
+            the mouse doesn't do anything.<br/>
+            <i>Note</i>: the chord buttons are the only buttons on the omnichord that
+            don't respond to mouse clicks. For all other buttons, you should interact
+            with the mouse.
           </li>
           <li>
             <i>Harp/Strumplate</i>. You can play harp sounds by using the row of keys <i>1234...-+</i>.
@@ -33,21 +38,38 @@ export default function Info(props) {
           <li>
             <i>Rhythm</i>. The rhythm's volume is 0 by default. You can increase the
             volume if you want to hear it; there is no on/off switch. You can
-            also adjust the tempo, and choose between 6 different rhythms.
+            also adjust the tempo and choose between 6 different rhythms.
           </li>
         </ol>
         <br/>
         <b>More Instructions, a.k.a. what do the other buttons do</b>
         <br/>
         Let's go through the remaining buttons section by section, starting with
-        the top left and moving counterclockwise.
+        the top left and moving counterclockwise. As stated in the note above,
+        all these buttons interact with the mouse.
         <ul>
           <li>
-            The memory button toggles between two modes, which we'll call <i>on</i> and
+            <i>Memory Button</i>. The memory button toggles between two modes, which we'll call <i>on</i> and
             <i> off</i>. It is on by default; in this mode, a chord will
             persist even after its corresponding key is released. For example,
-            if you press the <i>q</i> key, the Eb major chord
-            will continue playing even after you release the key.
+            if you press the <i>q</i> key, the Eb major chord will continue
+            playing even after you release the key. If memory is off,
+            a chord will stop as soon as you release its corresponding key.
+          </li>
+          <li>
+            <i>Volume Buttons</i>. These buttons
+            toggle the volumes of the three sounds. The harp and chords start
+            with their volume maxed out while the rhythm starts
+            with its volume at 0.
+          </li>
+          <li>
+            <i>Tempo Buttons</i>. These buttons have the same appearance as the
+            volume buttons, and toggle the rhythm's tempo. The tempo starts at
+            1. The lowest tempo is half speed, and the highest is double speed.
+          </li>
+          <li>
+            <i>Stop Button</i>. This button is located on the right side of the
+            strumplate. It stops all currently playing sounds.
           </li>
         </ul>
         <br/>
@@ -58,6 +80,22 @@ export default function Info(props) {
           <li>Definitely not Safari</li>
           <li>???</li>
         </ul>
+        <b>Cool Links</b>
+        <ul>
+          <li><a href='http://www.suzukimusic.co.uk/omnichord/suzuki_omnichord.htm'>Omnichord Heaven</a></li>
+          <li><a href='https://www.youtube.com/watch?v=w4h6ESL_B0Q'>gobbinjr - "Firefly" (song that got me into Omnichords!)</a></li>
+          <li><a href='https://www.youtube.com/watch?v=6ifyCBx_cRc'>Adventure Time cover</a></li>
+          <li><a href='https://www.youtube.com/watch?v=O9dkI0mxk3k'>Strokes cover</a></li>
+          <li><a href='https://www.youtube.com/watch?v=odQu6MSawOo'>Guy goes ham on omnichord live</a></li>
+        </ul>
+      </div>
+      <br/>
+      <div id='sourceContainer'>
+        <hr/>
+        <br/>
+        <div id='source'>
+          <a href='https://github.com/arcticmatt/online-omnichord'>Source</a>
+        </div>
       </div>
     </div>
   );

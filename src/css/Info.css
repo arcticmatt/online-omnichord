@@ -1,9 +1,7 @@
 #infoDiv {
-  height: 100vh;
-  width: 100%;
-  position: relative;
-  top: 5%;
-  font-family: 'helvetica';
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
 }
 
 #headerDiv {
@@ -11,8 +9,25 @@
 }
 
 #bodyDiv {
+  margin-bottom: 7%;
+  margin-left: 2.5%;
+  margin-right: 2.5%;
+}
+
+#sourceContainer {
+  background-color: white;
+  height: 7%;
+  position: fixed;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  margin-bottom: 0px;
+
+}
+
+#source {
+  text-align: right;
   position: relative;
-  left: 25%;
-  top: 2.5%;
-  width: 50%;
+  bottom: 35%;
+  right: 3%;
 }
