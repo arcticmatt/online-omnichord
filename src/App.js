@@ -51,17 +51,20 @@ class App extends Component {
     });
     this.rhythms[0].play();
 
+    // Some non-state variables
+    this.currentChord = undefined;
+    this.barAudio = [];
+    this.memory = true;
+    this.chordVolume = 1.0;
+    this.harpVolume = 1.0;
+    this.rhythmVolume = rhythmStartVolume;
+    this.rhythmTempo = 1.0;
+    this.currentRhythm = this.rhythms[0];
+
+    // Only put stuff in the state if it affects rendering.
     this.state = {
       chords: _.zipObject(keys, Array(keys.length).fill(0)),
-      currentChord: undefined,
       barSelect: Array(TOUCH_BAR_LENGTH).fill(0),
-      barAudio: [], // tracks last 12 bar audio objects, used for the stop button
-      memory: true,
-      chordVolume: 1.0,
-      harpVolume: 1.0,
-      rhythmVolume: rhythmStartVolume,
-      rhythmTempo: 1.0,
-      currentRhythm: this.rhythms[0], // Start with rock rhythm
     };
   }
 
@@ -114,19 +117,19 @@ class App extends Component {
 
   stopChord() {
     // Stop chord
-    if (this.state.currentChord) {
-      this.stopSound(this.state.currentChord);
+    if (this.currentChord) {
+      this.stopSound(this.currentChord);
     }
     this.setState({ chords: this.getNewChords('invalid key')}); // pass in an invalid key to deselect everything
   }
 
   stopBar() {
-    _.forEach(this.state.barAudio, a => a.pause());
+    _.forEach(this.barAudio, a => a.pause());
   }
 
   stopRhythm() {
-    if (this.state.currentRhythm) {
-      this.stopSound(this.state.currentRhythm);
+    if (this.currentRhythm) {
+      this.stopSound(this.currentRhythm);
     }
     // Don't change the current rhythm
   }
@@ -170,7 +173,7 @@ class App extends Component {
     // 2) User, while still playing chord 'g', plays chord 'c'
     // 3) When chord 'c' is played, chord 'g' is stopped. So we don't want to
     //    double stop it here.
-    if (this.isValidChordKey(e.key) && !this.state.memory && this.getCurrentKey() === e.key) {
+    if (this.isValidChordKey(e.key) && !this.memory && this.getCurrentKey() === e.key) {
       this.stopChord();
     } else if (this.isValidTouchKey(e.key) && upPosition === currentPosition) { // again, second boolean handles double stopping
       this.setState({
@@ -203,11 +206,12 @@ class App extends Component {
     // Play new chord
     const newChord = this.keyChordMap[newKey]
     const newAudio = this.chordSoundMap[newChord];
-    newAudio.volume = this.state.chordVolume;
+    newAudio.volume = this.chordVolume;
     newAudio.play();
 
-    // Update state
-    this.setState({ chords: this.getNewChords(newKey), currentChord: newAudio });
+    // Update state and other variables
+    this.currentChord = newAudio;
+    this.setState({ chords: this.getNewChords(newKey) });
   }
 
   handleTouch(touchKey) {
@@ -218,14 +222,15 @@ class App extends Component {
 
     // Play new bar sound
     const newAudio = new Audio(this.touchBarMap.g[position]);
-    newAudio.volume = this.state.harpVolume;
+    newAudio.volume = this.harpVolume;
     newAudio.play();
 
-    // Update state
-    this.setState({
-      barSelect: newBarSelect,
-      barAudio: _.slice([newAudio,...this.state.barAudio], 0, TOUCH_BAR_LENGTH * 2),
-    })
+    // Update state and other variables
+    this.barAudio.push(newAudio);
+    if (this.barAudio.length > TOUCH_BAR_LENGTH * 2) {
+      this.barAudio.shift(); // enforce max length
+    }
+    this.setState({ barSelect: newBarSelect })
   }
 
   handleStopButton() {
@@ -235,22 +240,19 @@ class App extends Component {
   }
 
   handleMemoryButton() {
-    const currentMemory = this.state.memory;
-    this.setState({ memory: !currentMemory});
-    if (currentMemory) {
+    this.memory = !this.memory;
+    if (!this.memory) { // if memory was switched off, stop chord
       this.stopChord();
     }
   }
 
   // Note: we don't do live adjustments for harp volume, because the notes
   handleChordVolume(change) {
-    const newVolume = this.changeVolume(this.state.chordVolume, change);
-    let newChord = {};
-    if (this.state.currentChord) {
-      newChord = this.state.currentChord;
-      newChord.volume = newVolume;
+    const newVolume = this.changeVolume(this.chordVolume, change);
+    if (this.currentChord) {
+      this.currentChord.volume = newVolume; // mutable, but it's not part of state
     }
-    this.setState({ chordVolume: newVolume, currentChord: newChord })
+    this.chordVolume = newVolume;
   }
 
   handleRhythmChange(index) {
@@ -259,30 +261,27 @@ class App extends Component {
     }
     this.stopRhythm(); // stop current rhythm
     const newRhythm = this.rhythms[index];
-    newRhythm.volume = this.state.rhythmVolume;
+    newRhythm.volume = this.rhythmVolume;
     newRhythm.play();
-    this.setState({ currentRhythm: newRhythm });
+    this.currentRhythm = newRhythm;
   }
 
   // TODO: cut down on duplicate code
   handleRhythmVolume(change) {
-    const newVolume = this.changeVolume(this.state.rhythmVolume, change);
-    let newRhythm  = {};
-    if (this.state.currentRhythm) {
-      newRhythm = this.state.currentRhythm;
-      newRhythm.volume = newVolume;
+    const newVolume = this.changeVolume(this.rhythmVolume, change);
+    if (this.currentRhythm) {
+      this.currentRhythm.volume = newVolume;
     }
-    this.setState({ rhythmVolume: newVolume, currentRhythm: newRhythm })
+    this.rhythmVolume = newVolume;
   }
 
   handleRhythmTempo(change) {
-    const newTempo = this.changeTempo(this.state.rhythmTempo, change);
+    const newTempo = this.changeTempo(this.rhythmTempo, change);
     let newRhythm  = {};
-    if (this.state.currentRhythm) {
-      newRhythm = this.state.currentRhythm;
-      newRhythm.playbackRate = newTempo;
+    if (this.currentRhythm) {
+      this.currentRhythm.playbackRate = newTempo;
     }
-    this.setState({ rhythmTempo: newTempo , currentRhythm: newRhythm })
+    this.rhythmTempo = newTempo;
   }
 
   render() {
@@ -301,12 +300,12 @@ class App extends Component {
                 <li>
                   <button
                     className='leftButton firstDownButton greyBg'
-                    onClick={() => this.setState({ harpVolume: this.changeVolume(this.state.harpVolume, -0.1)})}>
+                    onClick={() => this.harpVolume = this.changeVolume(this.harpVolume, -0.1)}>
                     -
                   </button>
                   <button
                     className='leftButton upButton greyBg'
-                    onClick={() => this.setState({ harpVolume: this.changeVolume(this.state.harpVolume, 0.1)})}>
+                    onClick={() => this.harpVolume = this.changeVolume(this.harpVolume, 0.1)}>
                     +
                   </button>
                   <button
