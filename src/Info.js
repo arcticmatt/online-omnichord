@@ -36,17 +36,27 @@ export default function Info(props) {
             also adjust the tempo, and choose between 6 different rhythms.
           </li>
         </ol>
-        <b>More Instructions, a.k.a what do the other buttons do</b>
+        <br/>
+        <b>More Instructions, a.k.a. what do the other buttons do</b>
+        <br/>
         Let's go through the remaining buttons section by section, starting with
         the top left and moving counterclockwise.
         <ul>
           <li>
-            The memory button toggles between two modes, which we'll call <i>on</i>
-            and <i>off</i>. It is on by default; in this mode, a chord will
+            The memory button toggles between two modes, which we'll call <i>on</i> and
+            <i> off</i>. It is on by default; in this mode, a chord will
             persist even after its corresponding key is released. For example,
+            if you press the <i>q</i> key, the Eb major chord
+            will continue playing even after you release the key.
           </li>
-          <li>yo</li>
-          <li>yo</li>
+        </ul>
+        <br/>
+        <b>Supported Browsers</b>
+        <ul>
+          <li>Chrome</li>
+          <li>Firefox</li>
+          <li>Definitely not Safari</li>
+          <li>???</li>
         </ul>
       </div>
     </div>
