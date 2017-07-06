@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import ButtonSpace from './ButtonSpace';
 import TouchBar from './TouchBar';
 import './css/App.css';
+import './css/Led.css';
 
 const TOUCH_BAR_LENGTH = 12;
 
@@ -368,7 +369,9 @@ class App extends Component {
                 </li>
               </ul>
             </div>
-            <div id='bottomleft' className='leftComponent'></div>
+            <div id='bottomleft' className='leftComponent'>
+              <div id='led-box'><div id='led-red'></div></div>
+            </div>
           </div>
           <div id='oBody'>
             <div id='buttonSpace'>
