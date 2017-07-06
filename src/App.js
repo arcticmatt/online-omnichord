@@ -7,6 +7,12 @@ import './css/Led.css';
 
 const TOUCH_BAR_LENGTH = 12;
 
+const KnobType = {
+  C_VOLUME: 'chord_volume',
+  R_VOLUME: 'rhythm_volume',
+  R_TEMPO: 'rhythm_tempo',
+}
+
 // TODO: use ogg instead of wav
 class App extends Component {
   constructor() {
@@ -154,18 +160,14 @@ class App extends Component {
     }
   }
 
-  change(param, change, min, max) {
+  changeParam(param, change, knobType, min=0.0, max=1.0) {
+    if (KnobType.R_TEMPO) {
+      min = .5;
+      max = 2.0;
+    }
     let newParam = param + change;
     newParam = newParam > max ? max : newParam;
     return newParam < min ? min : newParam;
-  }
-
-  changeVolume(volume, change) {
-    return this.change(volume, change, 0.0, 1.0)
-  }
-
-  changeTempo(tempo, change) {
-    return this.change(tempo, change, .5, 2); // audio vanishes if these params are not respected (built-in)
   }
 
   /*** Handler functions ***/
@@ -250,13 +252,39 @@ class App extends Component {
     }
   }
 
-  // Note: we don't do live adjustments for harp volume, because the notes
-  handleChordVolume(change) {
-    const newVolume = this.changeVolume(this.chordVolume, change);
-    if (this.currentChord) {
-      this.currentChord.volume = newVolume; // mutable, but it's not part of state
+  // Slightly confusing function name. It's because the actual omnichord has knobs,
+  // not p/minus buttons.
+  handleKnobChange(param, change, knobType) {
+    const newParam = this.changeParam(param, change, knobType);
+    switch (knobType) {
+      case KnobType.C_VOLUME:
+        if (this.currentChord) {
+          this.currentChord.volume = newParam;
+        }
+        this.chordVolume = newParam;
+        break;
+      case KnobType.R_VOLUME:
+        if (this.currentRhythm) {
+          this.currentRhythm.volume = newParam;
+        }
+        this.rhythmVolume = newParam;
+        break;
+      case KnobType.R_TEMPO:
+        if (this.currentRhythm) {
+          this.currentRhythm.playbackRate = newParam;
+        }
+        this.rhythmTempo = newParam;
+        break;
+      default:
+        console.warn('Unhandled case in handleKnobChange()');
     }
-    this.chordVolume = newVolume;
+    return newParam; // not currently used
+  }
+
+  // Note: we don't do live adjustments for harp volume, because the notes
+  // are pretty short. Instead, we just set this.harpVolume to zero.
+  handleChordVolume(change) {
+    this.handleKnobChange(this.chordVolume, change, KnobType.C_VOLUME);
   }
 
   handleRhythmChange(index) {
@@ -270,26 +298,16 @@ class App extends Component {
     this.currentRhythm = newRhythm;
   }
 
-  // TODO: cut down on duplicate code
   handleRhythmVolume(change) {
-    const newVolume = this.changeVolume(this.rhythmVolume, change);
-    if (this.currentRhythm) {
-      this.currentRhythm.volume = newVolume;
-    }
-    this.rhythmVolume = newVolume;
+    this.handleKnobChange(this.rhythmVolume, change, KnobType.R_VOLUME);
   }
 
   handleRhythmTempo(change) {
-    const newTempo = this.changeTempo(this.rhythmTempo, change);
-    let newRhythm  = {};
-    if (this.currentRhythm) {
-      this.currentRhythm.playbackRate = newTempo;
-    }
-    this.rhythmTempo = newTempo;
+    this.handleKnobChange(this.rhythmTempo, change, KnobType.R_TEMPO);
   }
 
   render() {
-    // Some constants to cut down on repeated properties
+    // Constant to cut down on repeated properties
     const rhythmClass = 'leftButton rhythmButton redBg'
     return (
       <div id='top'>
