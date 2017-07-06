@@ -9,7 +9,7 @@ export default function TouchBar(props) {
 }
 
 function TouchBarItem(props) {
-  let color = 'white';
+  let color = '#ffe699';
   if (props.barSelect[props.barNumber]) {
     color = 'red';
   }

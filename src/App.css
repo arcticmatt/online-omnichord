@@ -1,8 +1,7 @@
 /* I like this https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
-/* TODO: make everything relative */
 
 /*** Parents ***/
-.top {
+#top {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,7 +13,7 @@
   background-color: lightblue;
 }
 
-.parent {
+#parent {
   display: flex;
   height: 70%;
   width: 96%;
@@ -32,7 +31,7 @@
 
 #topleft {
   background-image: url('./images/omni-topleft.png');
-  background-size: 91% 98%;
+  background-size: 91% 97%;
   background-repeat: no-repeat;
   background-position: right;
 }
@@ -46,7 +45,7 @@
 
 #bottomleft {
   background-image: url('./images/omni-bottomleft.png');
-  background-size: 91% 98%;
+  background-size: 91% 97%;
   background-repeat: no-repeat;
   background-position: right;
 }
@@ -154,7 +153,7 @@
 }
 
 .stopButton {
-  background-color: white;
+  background-color: #ffe699;
   height: 9%;
   width: 90%;
   margin-left: 90%;
@@ -168,7 +167,7 @@
   background-size: 93% 76%;
   background-repeat: no-repeat;
   margin-top: 1%;
-  margin-left: 1%;
+  margin-left: .5%;
 }
 
 /*** General ***/

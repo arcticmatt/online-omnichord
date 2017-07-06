@@ -64,6 +64,12 @@ class App extends Component {
     };
   }
 
+  // Make background random pastel color
+  componentDidMount() {
+    const color = ranCol();
+    document.getElementById('top').style.backgroundColor = color;
+  }
+
   /*** Setup functions ***/
   chordPath(chord) {
     return `./${chord}/${chord}-chord.wav`;
@@ -280,8 +286,8 @@ class App extends Component {
 
   render() {
     return (
-      <div className='top'>
-        <div className='parent'>
+      <div id='top'>
+        <div id='parent'>
           <div className='leftSide'>
             <div id='topleft'>
               <ul>
@@ -383,6 +389,11 @@ class App extends Component {
       </div>
     );
   }
+}
+
+function ranCol() { //function name
+  const hue = Math.floor(Math.random() * 360);
+  return 'hsl(' + hue + ', 100%, 87.5%)';
 }
 
 export default App;
