@@ -16,42 +16,20 @@ class App extends Component {
     window.onkeydown = e => this.handleDown(e);
     window.onkeyup = e => this.handleUp(e);
 
-    // Arrays to be used for object (map) creation
+    // Needed to initialize the sounds
     const keys = 'qwertyuioasdfghjklzxcvbnm,.';
     const chords = ['eb', 'bb', 'f', 'c', 'g', 'd', 'a', 'e', 'b',
       'ebm', 'bbm', 'fm', 'cm', 'gm', 'dm', 'am', 'em', 'bm',
       'eb7', 'bb7', 'f7', 'c7', 'g7', 'd7', 'a7', 'e7', 'b7'];
-
-    // Map from key to chord
-    this.keyChordMap = _.zipObject(keys, chords);
-
     const pathToAudio = require.context('./audio', true);
-    // Map each chord to its corresponding audio file, and add an event listener
-    // to each audio object to make it loop.
-    // TODO: right now, only the g-chord is supported
-    this.chordSoundMap = _.zipObject(chords, chords.map(c => {
-      const a = new Audio(pathToAudio(this.chordPath('g'))) // TODO: remove hardcoded g
-      return this.loopAudio(a);
-    }));
+    const rhythmStartVolume = 0;
 
-    // TODO: add other notes using zipobject and map
-    this.touchBarMap = {
-      g: _.zipObject(_.range(12), this.notePaths('g').map(p => pathToAudio(p))),
-    };
+    // Initialize all the sound stuff
+    this.initChords(keys, chords, pathToAudio);
+    this.initTouchBar(pathToAudio);
+    this.initRhythms(rhythmStartVolume, pathToAudio);
 
-    // Initialize rhythm array
-    // TODO: use different rhythms
-    const rhythmStartVolume = 0.0;
-    const rhythmNames = ['rock', 'rock', 'rock', 'rock', 'rock', 'rock'];
-    const rhythmPaths = rhythmNames.map(s => `./rhythm/${s}.wav`);
-    this.rhythms = rhythmPaths.map(p => {
-      const a = new Audio(pathToAudio(p));
-      a.volume = rhythmStartVolume;
-      return this.loopAudio(a);
-    });
-    this.rhythms[0].play();
-
-    // Some non-state variables
+    // Initialize non-state variables
     this.currentChord = undefined;
     this.barAudio = [];
     this.memory = true;
@@ -68,6 +46,42 @@ class App extends Component {
     };
   }
 
+  /*** Init functions ***/
+  initChords(keys, chords, pathToAudio) {
+    // Map from key to chord
+    this.keyChordMap = _.zipObject(keys, chords);
+
+    // Map each chord to its corresponding audio file, and add an event listener
+    // to each audio object to make it loop.
+    // TODO: right now, only the g-chord is supported
+    this.chordSoundMap = _.zipObject(chords, chords.map(c => {
+      const a = new Audio(pathToAudio(this.chordPath('g'))) // TODO: remove hardcoded g
+      return this.loopAudio(a);
+    }));
+  }
+
+  initTouchBar(pathToAudio) {
+    // TODO: add other notes using zipobject and map
+    this.touchBarMap = {
+      g: _.zipObject(_.range(12), this.notePaths('g').map(p => pathToAudio(p))),
+    };
+  }
+
+  initRhythms(startVolume, pathToAudio) {
+    // Initialize rhythm array
+    // TODO: use different rhythms
+    const rhythmStartVolume = 0.0;
+    const rhythmNames = ['rock', 'rock', 'rock', 'rock', 'rock', 'rock'];
+    const rhythmPaths = rhythmNames.map(s => `./rhythm/${s}.wav`);
+    this.rhythms = rhythmPaths.map(p => {
+      const a = new Audio(pathToAudio(p));
+      a.volume = startVolume;
+      return this.loopAudio(a);
+    });
+    this.rhythms[0].play();
+  }
+
+  /*** Random ***/
   // Make background random pastel color
   componentDidMount() {
     const color = ranCol();
@@ -99,6 +113,14 @@ class App extends Component {
     a.currentTime = 0;
   }
 
+  loopAudio(a) {
+    a.addEventListener('ended', function() {
+      this.currentTime = 0;
+      this.play();
+    }, false);
+    return a;
+  }
+
   getNewChords(newKey) {
     // Make new chord array
     const newChords = _.mapValues(this.state.chords, (value, key) => {
@@ -116,7 +138,6 @@ class App extends Component {
   }
 
   stopChord() {
-    // Stop chord
     if (this.currentChord) {
       this.stopSound(this.currentChord);
     }
@@ -131,37 +152,20 @@ class App extends Component {
     if (this.currentRhythm) {
       this.stopSound(this.currentRhythm);
     }
-    // Don't change the current rhythm
+  }
+
+  change(param, change, min, max) {
+    let newParam = param + change;
+    newParam = newParam > max ? max : newParam;
+    return newParam < min ? min : newParam;
   }
 
   changeVolume(volume, change) {
-    const newVolume = volume + change;
-    if (newVolume > 1) {
-      return 1;
-    }
-    if (newVolume < 0) {
-      return 0;
-    }
-    return newVolume;
+    return this.change(volume, change, 0.0, 1.0)
   }
 
   changeTempo(tempo, change) {
-    const newTempo = tempo + change;
-    if (newTempo > 3) {
-      return 3;
-    }
-    if (newTempo < .25) {
-      return .25;
-    }
-    return newTempo;
-  }
-
-  loopAudio(a) {
-    a.addEventListener('ended', function() {
-      this.currentTime = 0;
-      this.play();
-    }, false);
-    return a;
+    return this.change(tempo, change, .5, 2); // audio vanishes if these params are not respected (built-in)
   }
 
   /*** Handler functions ***/
