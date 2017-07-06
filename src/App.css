@@ -7,14 +7,19 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-image: url('./images/omniwhole.png');
+  background-repeat: no-repeat;
+  background-position: 36% 64%;
+  background-size: 96% 86%;
+  background-color: lightblue;
 }
 
 .parent {
   display: flex;
   height: 70%;
-  width: 85%;
-  background-color: blue;
-  margin-right: 70px;
+  width: 96%;
+  /*background-color: lightblue;*/
+  /*margin-right: 70px;*/
 }
 
 /*** Left Side ***/
@@ -23,6 +28,27 @@
   flex-direction: column;
   justify-content: space-around;
   width: 20%;
+}
+
+#topleft {
+  background-image: url('./images/omni-topleft.png');
+  background-size: 91% 98%;
+  background-repeat: no-repeat;
+  background-position: right;
+}
+
+#middleleft {
+  background-image: url('./images/omni-middleleft.png');
+  background-size: 99% 99%;
+  background-repeat: no-repeat;
+  background-position: right;
+}
+
+#bottomleft {
+  background-image: url('./images/omni-bottomleft.png');
+  background-size: 91% 98%;
+  background-repeat: no-repeat;
+  background-position: right;
 }
 
 .leftSide div {
@@ -34,14 +60,15 @@
 }
 
 .leftButton {
-  height: 45%;
+  height: 43%;
   width: 10%;
+  margin-top: 2%;
 }
 
 #memoryButton {
   background-color: yellow;
-  margin-top: 20px;
-  margin-left: 77%;
+  margin-top: 9%;
+  margin-left: 79%;
 }
 
 .upButton {
@@ -51,7 +78,7 @@
 
 .firstDownButton {
   background-color: rgb(220,220,220);
-  margin-left: 22%;
+  margin-left: 25%;
 }
 
 .secondDownButton {
@@ -62,38 +89,43 @@
 .rhythmButton {
   background-color: rgb(255,198,198);
   height: 40%;
-  margin-left: 5%;
-  margin-top: 7%;
+  margin-left: 4.3%;
+  margin-top: 8%;
 }
 
 #firstRhythmButton {
   background-color: rgb(255,198,198);
-  margin-left: 8%;
+  margin-left: 13%;
 }
 
 /*** Button Space & Body ***/
 #oBody {
   width: 45%;
   height: 100%;
-  background-color: orange;
+  /*background-color: purple;*/
 }
 
 .buttonSpace {
-  margin-top: 17%;
+  margin-top: 13%;
   margin-left: 5%;
   width: 100%;
-  height: 50%;
-  background-color: yellow;
+  height: 55%;
+  /*background-color: yellow;*/
 }
 
 #oLogo {
-  background-color: gray;
-  height: 33%
+  /*background-color: gray;*/
+  margin-bottom: 1%;
+  height: 30%;
+  background-image: url('./images/omnilogo.png');
+  background-size: 65% 65%;
+  background-position: top;
+  background-repeat: no-repeat;
 }
 
 /*** Bar container ***/
 #barContainer {
-  height: 75%;
+  height: 80%;
   width: 13%;
   background-image: url('./images/touchbar.png');
   background-size: 100% 100%;
@@ -127,6 +159,16 @@
   width: 90%;
   margin-left: 90%;
   margin-top: 100%;
+}
+
+/*** Speaker ***/
+#speaker {
+  width: 22%;
+  background-image: url('./images/omnispeaker.png');
+  background-size: 93% 76%;
+  background-repeat: no-repeat;
+  margin-top: 1%;
+  margin-left: 1%;
 }
 
 /*** General ***/

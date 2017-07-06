@@ -283,7 +283,7 @@ class App extends Component {
       <div className='top'>
         <div className='parent'>
           <div className='leftSide'>
-            <div style={{backgroundColor: 'orange'}}>
+            <div id='topleft'>
               <ul>
                 <li>
                   <button className='leftButton' id='memoryButton' onClick={() => this.handleMemoryButton()}>
@@ -313,7 +313,7 @@ class App extends Component {
                 </li>
               </ul>
             </div>
-            <div style={{backgroundColor: 'red'}}>
+            <div id='middleleft'>
               <ul>
                 <li>
                   <button
@@ -362,13 +362,13 @@ class App extends Component {
                 </li>
               </ul>
             </div>
-            <div style={{backgroundColor: 'green'}}>Power</div>
+            <div id='bottomleft'></div>
           </div>
           <div id='oBody'>
             <div className='buttonSpace'>
               <ButtonSpace keys={_.keys(this.keyChordMap)} chords={this.state.chords} />
             </div>
-            <div id='oLogo'>Hello</div>
+            <div id='oLogo'></div>
           </div>
           <div id='barContainer'>
             <div className='barSpace'>
@@ -378,6 +378,7 @@ class App extends Component {
               <button className='stopButton' onClick={() => this.handleStopButton()}></button>
             </div>
           </div>
+          <div id='speaker'></div>
         </div>
       </div>
     );
