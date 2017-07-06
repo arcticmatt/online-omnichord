@@ -286,6 +286,8 @@ class App extends Component {
   }
 
   render() {
+    // Some constants to cut down on repeated properties
+    const rhythmClass = 'leftButton rhythmButton redBg'
     return (
       <div id='top'>
         <div id='parent'>
@@ -323,49 +325,18 @@ class App extends Component {
             <div id='middleleft' className='leftComponent'>
               <ul className='hideUL'>
                 <li>
-                  <button
-                    id='firstRhythmButton'
-                    onClick={() => this.handleRhythmChange(0)}
-                  className='leftButton rhythmButton redBg'>
-                  </button>
-                  <button
-                    onClick={() => this.handleRhythmChange(1)}
-                  className='leftButton rhythmButton redBg'>
-                  </button>
-                  <button
-                    onClick={() => this.handleRhythmChange(2)}
-                  className='leftButton rhythmButton redBg'>
-                  </button>
-                  <button
-                    onClick={() => this.handleRhythmChange(3)}
-                  className='leftButton rhythmButton redBg'>
-                  </button>
-                  <button
-                    onClick={() => this.handleRhythmChange(4)}
-                  className='leftButton rhythmButton redBg'>
-                  </button>
-                  <button
-                    onClick={() => this.handleRhythmChange(5)}
-                  className='leftButton rhythmButton redBg'>
-                  </button>
+                  <button id='firstRhythmButton' onClick={() => this.handleRhythmChange(0)} className={rhythmClass}></button>
+                  <button onClick={() => this.handleRhythmChange(1)} className={rhythmClass}></button>
+                  <button onClick={() => this.handleRhythmChange(2)} className={rhythmClass}></button>
+                  <button onClick={() => this.handleRhythmChange(3)} className={rhythmClass}></button>
+                  <button onClick={() => this.handleRhythmChange(4)} className={rhythmClass}></button>
+                  <button onClick={() => this.handleRhythmChange(5)} className={rhythmClass}></button>
                 </li>
                 <li>
-                  <button
-                    onClick={() => this.handleRhythmTempo(-0.1)}
-                  className='leftButton firstDownButton greyBg'>
-                  -</button>
-                  <button
-                    onClick={() => this.handleRhythmTempo(0.1)}
-                  className='leftButton upButton greyBg'>
-                  +</button>
-                  <button
-                    onClick={() => this.handleRhythmVolume(-0.1)}
-                  className='leftButton secondDownButton greyBg'>
-                  -</button>
-                  <button
-                    onClick={() => this.handleRhythmVolume(0.1)}
-                  className='leftButton upButton greyBg'>
-                  +</button>
+                  <button onClick={() => this.handleRhythmTempo(-0.1)} className='leftButton firstDownButton greyBg'>-</button>
+                  <button onClick={() => this.handleRhythmTempo(0.1)} className='leftButton upButton greyBg'>+</button>
+                  <button onClick={() => this.handleRhythmVolume(-0.1)} className='leftButton secondDownButton greyBg'>-</button>
+                  <button onClick={() => this.handleRhythmVolume(0.1)} className='leftButton upButton greyBg'>+</button>
                 </li>
               </ul>
             </div>
@@ -374,18 +345,12 @@ class App extends Component {
             </div>
           </div>
           <div id='oBody'>
-            <div id='buttonSpace'>
-              <ButtonSpace keys={_.keys(this.keyChordMap)} chords={this.state.chords} />
-            </div>
+            <div id='buttonSpace'><ButtonSpace keys={_.keys(this.keyChordMap)} chords={this.state.chords} /></div>
             <div id='oLogo'></div>
           </div>
           <div id='barContainer'>
-            <div id='barSpace' className='clearBg'>
-              <TouchBar barSelect={this.state.barSelect} />
-            </div>
-            <div className='stopBar clearBg'>
-              <button className='stopButton' onClick={() => this.handleStopButton()}></button>
-            </div>
+            <div id='barSpace' className='clearBg'><TouchBar barSelect={this.state.barSelect} /></div>
+            <div className='stopBar clearBg'><button className='stopButton' onClick={() => this.handleStopButton()}></button></div>
           </div>
           <div id='speaker'></div>
         </div>
