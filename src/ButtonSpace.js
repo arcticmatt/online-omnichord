@@ -1,14 +1,14 @@
 import React from 'react';
-import './ButtonSpace.css';
+import './css/ButtonSpace.css';
 
 const NUM_BUTTONS = 9;
 const MARGINS = ['15%', '16.5%', '17.5%'];
 
 export default function ButtonSpace(props) {
   return (
-    <ul id='buttonList'>
+    <ul id='buttonList' className='hideUL'>
       <div id='buttonDiv'>
-        <ul>
+        <ul className='hideUL'>
           <li className='dummyLi'></li>
             <ButtonRow keys={props.keys} chords={props.chords} row={0} />
           <ButtonRow keys={props.keys} chords={props.chords} row={1} />

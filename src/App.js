@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import ButtonSpace from './ButtonSpace';
 import TouchBar from './TouchBar';
-import './App.css';
+import './css/App.css';
 
 const TOUCH_BAR_LENGTH = 12;
 
@@ -290,7 +290,7 @@ class App extends Component {
         <div id='parent'>
           <div className='leftSide'>
             <div id='topleft'>
-              <ul>
+              <ul className='hideUL'>
                 <li>
                   <button className='leftButton' id='memoryButton' onClick={() => this.handleMemoryButton()}>
                   </button>
@@ -320,7 +320,7 @@ class App extends Component {
               </ul>
             </div>
             <div id='middleleft'>
-              <ul>
+              <ul className='hideUL'>
                 <li>
                   <button
                     id='firstRhythmButton'

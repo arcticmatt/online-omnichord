@@ -1,11 +1,11 @@
 import _ from 'lodash';
 import React from 'react';
-import './TouchBar.css';
+import './css/TouchBar.css';
 
 export default function TouchBar(props) {
   const items = _.rangeRight(12).map(num =>
     <TouchBarItem key={num} barSelect={props.barSelect} barNumber={num} />);
-  return (<ul id="touchBarUL">{items}</ul>);
+  return (<ul id="touchBarUL" className='hideUL'>{items}</ul>);
 }
 
 function TouchBarItem(props) {

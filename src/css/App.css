@@ -6,7 +6,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-image: url('./images/omniwhole.png');
+  background-image: url('../images/omniwhole.png');
   background-repeat: no-repeat;
   background-position: 36% 64%;
   background-size: 96% 86%;
@@ -30,21 +30,21 @@
 }
 
 #topleft {
-  background-image: url('./images/omni-topleft.png');
+  background-image: url('../images/omni-topleft.png');
   background-size: 91% 97%;
   background-repeat: no-repeat;
   background-position: right;
 }
 
 #middleleft {
-  background-image: url('./images/omni-middleleft.png');
+  background-image: url('../images/omni-middleleft.png');
   background-size: 99% 99%;
   background-repeat: no-repeat;
   background-position: right;
 }
 
 #bottomleft {
-  background-image: url('./images/omni-bottomleft.png');
+  background-image: url('../images/omni-bottomleft.png');
   background-size: 91% 97%;
   background-repeat: no-repeat;
   background-position: right;
@@ -116,7 +116,7 @@
   /*background-color: gray;*/
   margin-bottom: 1%;
   height: 30%;
-  background-image: url('./images/omnilogo.png');
+  background-image: url('../images/omnilogo.png');
   background-size: 65% 65%;
   background-position: top;
   background-repeat: no-repeat;
@@ -126,7 +126,7 @@
 #barContainer {
   height: 80%;
   width: 13%;
-  background-image: url('./images/touchbar.png');
+  background-image: url('../images/touchbar.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
@@ -163,7 +163,7 @@
 /*** Speaker ***/
 #speaker {
   width: 22%;
-  background-image: url('./images/omnispeaker.png');
+  background-image: url('../images/omnispeaker.png');
   background-size: 93% 76%;
   background-repeat: no-repeat;
   margin-top: 1%;
@@ -171,7 +171,7 @@
 }
 
 /*** General ***/
-ul {
+.hideUL {
   list-style-type: none;
   margin: 0;
   padding: 0;

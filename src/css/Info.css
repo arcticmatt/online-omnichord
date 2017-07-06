@@ -1,0 +1,15 @@
+#infoDiv {
+  height: 100vh;
+  width: 100%;
+  margin-top: 5%;
+  font-family: 'helvetica';
+}
+
+#headerDiv {
+  text-align: center;
+}
+
+#bodyDiv {
+  margin-left: 25%;
+  width: 50%;
+}

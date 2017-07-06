@@ -25,7 +25,7 @@
 #buttonDiv {
   height: 70%;
   /*background-color: red;*/
-  background-image: url('./images/chord_outline.png');
+  background-image: url('../images/chord_outline.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
