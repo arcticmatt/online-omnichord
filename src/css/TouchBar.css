@@ -1,7 +1,6 @@
 #touchBarUL {
   height: 100%;
   width: 90%;
-  background-color: red;
   display: flex;
   flex-direction: column;
   justify-content: space-around;

@@ -3,16 +3,16 @@
   width: 100%;
 }
 
-.dummyLi {
-  height: 25%;
-  width: 100%;
-}
-
 .chordButton {
   height: 60%;
   width: 5%;
   background-color: white;
   margin-right: 4.3%;
+}
+
+#dummyLi {
+  height: 25%;
+  width: 100%;
 }
 
 #buttonList {
@@ -24,7 +24,6 @@
 
 #buttonDiv {
   height: 70%;
-  /*background-color: red;*/
   background-image: url('../images/chord_outline.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;

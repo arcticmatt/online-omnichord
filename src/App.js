@@ -6,7 +6,7 @@ import './css/App.css';
 
 const TOUCH_BAR_LENGTH = 12;
 
-// TODO: use mp3s instead of wavs
+// TODO: use ogg instead of wav
 class App extends Component {
   constructor() {
     super();
@@ -33,7 +33,7 @@ class App extends Component {
       return this.loopAudio(a);
     }));
 
-    // TODO: add other notes
+    // TODO: add other notes using zipobject and map
     this.touchBarMap = {
       g: _.zipObject(_.range(12), this.notePaths('g').map(p => pathToAudio(p))),
     };
@@ -288,99 +288,99 @@ class App extends Component {
     return (
       <div id='top'>
         <div id='parent'>
-          <div className='leftSide'>
-            <div id='topleft'>
+          <div id='leftSide'>
+            <div id='topleft' className='leftComponent'>
               <ul className='hideUL'>
                 <li>
-                  <button className='leftButton' id='memoryButton' onClick={() => this.handleMemoryButton()}>
+                  <button id='memoryButton' className='leftButton' onClick={() => this.handleMemoryButton()}>
                   </button>
                 </li>
                 <li>
                   <button
-                    className='leftButton firstDownButton'
+                    className='leftButton firstDownButton greyBg'
                     onClick={() => this.setState({ harpVolume: this.changeVolume(this.state.harpVolume, -0.1)})}>
                     -
                   </button>
                   <button
-                    className='leftButton upButton'
+                    className='leftButton upButton greyBg'
                     onClick={() => this.setState({ harpVolume: this.changeVolume(this.state.harpVolume, 0.1)})}>
                     +
                   </button>
                   <button
-                    className='leftButton secondDownButton'
+                    className='leftButton secondDownButton greyBg'
                     onClick={() => this.handleChordVolume(-0.1)}>
                     -
                   </button>
                   <button
-                    className='leftButton upButton'
+                    className='leftButton upButton greyBg'
                     onClick={() => this.handleChordVolume(0.1)}>
                     +
                   </button>
                 </li>
               </ul>
             </div>
-            <div id='middleleft'>
+            <div id='middleleft' className='leftComponent'>
               <ul className='hideUL'>
                 <li>
                   <button
                     id='firstRhythmButton'
                     onClick={() => this.handleRhythmChange(0)}
-                  className='leftButton rhythmButton'>
+                  className='leftButton rhythmButton redBg'>
                   </button>
                   <button
                     onClick={() => this.handleRhythmChange(1)}
-                  className='leftButton rhythmButton'>
+                  className='leftButton rhythmButton redBg'>
                   </button>
                   <button
                     onClick={() => this.handleRhythmChange(2)}
-                  className='leftButton rhythmButton'>
+                  className='leftButton rhythmButton redBg'>
                   </button>
                   <button
                     onClick={() => this.handleRhythmChange(3)}
-                  className='leftButton rhythmButton'>
+                  className='leftButton rhythmButton redBg'>
                   </button>
                   <button
                     onClick={() => this.handleRhythmChange(4)}
-                  className='leftButton rhythmButton'>
+                  className='leftButton rhythmButton redBg'>
                   </button>
                   <button
                     onClick={() => this.handleRhythmChange(5)}
-                  className='leftButton rhythmButton'>
+                  className='leftButton rhythmButton redBg'>
                   </button>
                 </li>
                 <li>
                   <button
                     onClick={() => this.handleRhythmTempo(-0.1)}
-                  className='leftButton firstDownButton'>
+                  className='leftButton firstDownButton greyBg'>
                   -</button>
                   <button
                     onClick={() => this.handleRhythmTempo(0.1)}
-                  className='leftButton upButton'>
+                  className='leftButton upButton greyBg'>
                   +</button>
                   <button
                     onClick={() => this.handleRhythmVolume(-0.1)}
-                  className='leftButton secondDownButton'>
+                  className='leftButton secondDownButton greyBg'>
                   -</button>
                   <button
                     onClick={() => this.handleRhythmVolume(0.1)}
-                  className='leftButton upButton'>
+                  className='leftButton upButton greyBg'>
                   +</button>
                 </li>
               </ul>
             </div>
-            <div id='bottomleft'></div>
+            <div id='bottomleft' className='leftComponent'></div>
           </div>
           <div id='oBody'>
-            <div className='buttonSpace'>
+            <div id='buttonSpace'>
               <ButtonSpace keys={_.keys(this.keyChordMap)} chords={this.state.chords} />
             </div>
             <div id='oLogo'></div>
           </div>
           <div id='barContainer'>
-            <div className='barSpace'>
+            <div id='barSpace' className='clearBg'>
               <TouchBar barSelect={this.state.barSelect} />
             </div>
-            <div className='stopBar'>
+            <div className='stopBar clearBg'>
               <button className='stopButton' onClick={() => this.handleStopButton()}></button>
             </div>
           </div>

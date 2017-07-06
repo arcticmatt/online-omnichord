@@ -9,8 +9,8 @@ export default function ButtonSpace(props) {
     <ul id='buttonList' className='hideUL'>
       <div id='buttonDiv'>
         <ul className='hideUL'>
-          <li className='dummyLi'></li>
-            <ButtonRow keys={props.keys} chords={props.chords} row={0} />
+          <li id='dummyLi'></li>
+          <ButtonRow keys={props.keys} chords={props.chords} row={0} />
           <ButtonRow keys={props.keys} chords={props.chords} row={1} />
           <ButtonRow keys={props.keys} chords={props.chords} row={2} />
         </ul>

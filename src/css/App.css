@@ -1,6 +1,7 @@
 /* I like this https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
 
 /*** Parents ***/
+/* Contains parent */
 #top {
   display: flex;
   justify-content: center;
@@ -10,54 +11,52 @@
   background-repeat: no-repeat;
   background-position: 36% 64%;
   background-size: 96% 86%;
-  background-color: lightblue;
 }
 
+/* Contains all the "parts" (leftSide, buttonContainer, etc.) */
 #parent {
   display: flex;
   height: 70%;
   width: 96%;
-  /*background-color: lightblue;*/
-  /*margin-right: 70px;*/
 }
 
 /*** Left Side ***/
-.leftSide {
+#leftSide {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   width: 20%;
 }
 
+#leftSide div {
+  height: 100%;
+}
+
+#leftSide li {
+  height: 50%;
+}
+
+.leftComponent {
+  background-position: right;
+  background-repeat: no-repeat;
+}
+
 #topleft {
   background-image: url('../images/omni-topleft.png');
   background-size: 91% 97%;
-  background-repeat: no-repeat;
-  background-position: right;
 }
 
 #middleleft {
   background-image: url('../images/omni-middleleft.png');
   background-size: 99% 99%;
-  background-repeat: no-repeat;
-  background-position: right;
 }
 
 #bottomleft {
   background-image: url('../images/omni-bottomleft.png');
   background-size: 91% 97%;
-  background-repeat: no-repeat;
-  background-position: right;
 }
 
-.leftSide div {
-  height: 100%;
-}
-
-.leftSide li {
-  height: 50%;
-}
-
+/* Applies to all buttons on the left side */
 .leftButton {
   height: 43%;
   width: 10%;
@@ -65,35 +64,34 @@
 }
 
 #memoryButton {
+  position: relative;
   background-color: yellow;
-  margin-top: 9%;
-  margin-left: 79%;
+  top: 18%;
+  left: 79%;
 }
 
-.upButton {
-  background-color: rgb(220,220,220);
-  margin-left: 5%;
-}
-
+/* Next three apply to the volume buttons */
 .firstDownButton {
-  background-color: rgb(220,220,220);
   margin-left: 25%;
 }
 
 .secondDownButton {
-  background-color: rgb(220,220,220);
   margin-left: 15%;
 }
 
+.upButton {
+  margin-left: 5%;
+}
+
+
 .rhythmButton {
-  background-color: rgb(255,198,198);
+  position: relative;
   height: 40%;
   margin-left: 4.3%;
-  margin-top: 8%;
+  top: 18%;
 }
 
 #firstRhythmButton {
-  background-color: rgb(255,198,198);
   margin-left: 13%;
 }
 
@@ -101,20 +99,20 @@
 #oBody {
   width: 45%;
   height: 100%;
-  /*background-color: purple;*/
 }
 
-.buttonSpace {
-  margin-top: 13%;
-  margin-left: 5%;
+#buttonSpace {
+  position: relative;
+  top: 13%;
+  left: 4%;
   width: 100%;
   height: 55%;
-  /*background-color: yellow;*/
 }
 
 #oLogo {
-  /*background-color: gray;*/
-  margin-bottom: 1%;
+  position: relative;
+  right: 3%;
+  top: 12%;
   height: 30%;
   background-image: url('../images/omnilogo.png');
   background-size: 65% 65%;
@@ -122,7 +120,7 @@
   background-repeat: no-repeat;
 }
 
-/*** Bar container ***/
+/*** Bar container (contains barSpace and stopBar) ***/
 #barContainer {
   height: 80%;
   width: 13%;
@@ -135,19 +133,12 @@
 }
 
 /*** Bar Space ***/
-.barSpace {
+#barSpace {
   width: 40%;
   height: 90%;
-  background-color: rgb(0,0,0,0);
-  /*background-color: blue;*/
   position: relative;
   left: 10%;
   top: 5%;
-}
-
-#testDiv {
-  background-color: yellow;
-  position: relative;
 }
 
 /*** Stop bar ***/
@@ -156,25 +147,26 @@
   left: 10%;
   height: 100%;
   width: 20%;
-  background-color: rgb(0,0,0,0);
 }
 
 .stopButton {
   background-color: #ffe699;
   height: 9%;
   width: 90%;
-  margin-left: 90%;
-  margin-top: 100%;
+  position: relative;
+  top: 15%;
+  left: 90%;
 }
 
 /*** Speaker ***/
 #speaker {
   width: 22%;
   background-image: url('../images/omnispeaker.png');
-  background-size: 93% 76%;
+  background-size: 92% 73%;
   background-repeat: no-repeat;
-  margin-top: 1%;
-  margin-left: .5%;
+  position: relative;
+  top: 3%;
+  left: 0.5%;
 }
 
 /*** General ***/
@@ -183,4 +175,16 @@
   margin: 0;
   padding: 0;
   height: 100%;
+}
+
+.greyBg {
+  background-color: rgb(220,220,220);
+}
+
+.redBg {
+  background-color: rgb(255,198,198);
+}
+
+.clearBg {
+  background-color: rgb(0,0,0,0);
 }
