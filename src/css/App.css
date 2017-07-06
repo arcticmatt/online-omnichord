@@ -169,6 +169,14 @@
   left: 0.5%;
 }
 
+/*** Info ***/
+#info {
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
+  text-align: right;
+}
+
 /*** General ***/
 .hideUL {
   list-style-type: none;

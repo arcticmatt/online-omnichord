@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import ButtonSpace from './ButtonSpace';
 import TouchBar from './TouchBar';
+import { Link } from 'react-router-dom';
 import './css/App.css';
 import './css/Led.css';
 
@@ -373,6 +374,7 @@ class App extends Component {
             <div className='stopBar clearBg'><button className='stopButton' onClick={() => this.handleStopButton()}></button></div>
           </div>
           <div id='speaker'></div>
+          <div id='info'><Link to='/info'>info/instructions</Link></div>
         </div>
       </div>
     );

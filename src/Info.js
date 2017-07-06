@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './css/Info.css';
 
 // This component is entirely HTML and CSS.
@@ -93,8 +94,11 @@ export default function Info(props) {
       <div id='sourceContainer'>
         <hr/>
         <br/>
-        <div id='source'>
-          <a href='https://github.com/arcticmatt/online-omnichord'>Source</a>
+        <div id='source' className='footer'>
+          <a href='https://github.com/arcticmatt/online-omnichord'>source</a>
+        </div>
+        <div id='back' className='footer'>
+          <Link to='/'>back to instrument</Link>
         </div>
       </div>
     </div>
