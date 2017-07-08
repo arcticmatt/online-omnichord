@@ -92,11 +92,14 @@ class App extends Component {
   initRhythms(startVolume, pathToAudio) {
     // Initialize rhythm array
     // TODO: use different rhythms
-    const rhythmNames = ['rock', 'rock', 'rock', 'rock', 'rock', 'rock'];
-    const rhythmPaths = rhythmNames.map(s => `./rhythm/${s}.wav`);
+    const rhythmNames = ['rock', 'waltz', 'slowrock', 'latin', 'foxtrot', 'swing'];
+    const rhythmPaths = rhythmNames.map(s => `./rhythm/${s}.ogg`);
     this.rhythms = rhythmPaths.map(p => {
-      const a = new Audio(pathToAudio(p));
-      a.volume = startVolume;
+      const a = new Howl({
+        src: pathToAudio(p),
+        loop: true,
+      });
+      a.volume(startVolume);
       return a;
     });
     this.rhythms[0].play();
@@ -174,14 +177,14 @@ class App extends Component {
 
   stopRhythm() {
     if (this.currentRhythm) {
-      this.stopSound(this.currentRhythm);
+      this.currentRhythm.stop();
     }
   }
 
   changeParam(param, change, knobType, min=0.0, max=1.0) {
     if (knobType === KnobType.R_TEMPO) {
       min = .5;
-      max = 2.0;
+      max = 4.0;
     }
     let newParam = param + change;
     newParam = newParam > max ? max : newParam;
@@ -296,7 +299,7 @@ class App extends Component {
         break;
       case KnobType.R_TEMPO:
         if (this.currentRhythm) {
-          this.currentRhythm.playbackRate = newParam;
+          this.currentRhythm.rate(newParam);
         }
         this.rhythmTempo = newParam;
         break;
@@ -318,7 +321,7 @@ class App extends Component {
     }
     this.stopRhythm(); // stop current rhythm
     const newRhythm = this.rhythms[index];
-    newRhythm.volume = this.rhythmVolume;
+    newRhythm.volume(this.rhythmVolume);
     newRhythm.play();
     this.currentRhythm = newRhythm;
   }

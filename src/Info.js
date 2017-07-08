@@ -4,6 +4,8 @@ import './css/Info.css';
 
 // This component is entirely HTML and CSS.
 export default function Info(props) {
+  window.onkeydown = undefined; // disable instrument on this page
+  window.onkeyup = undefined;
   document.body.margin = 0;
   document.body.padding = 0;
   return (
@@ -69,7 +71,7 @@ export default function Info(props) {
           <li>
             <i>Tempo Buttons</i>. These buttons have the same appearance as the
             volume buttons, and toggle the rhythm's tempo. The tempo starts at
-            1. The lowest tempo is half speed, and the highest is double speed.
+            1. The lowest tempo is half speed, and the highest is quadruple speed.
           </li>
           <li>
             <i>Stop Button</i>. This button is located on the right side of the
