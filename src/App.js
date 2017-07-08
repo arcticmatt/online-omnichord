@@ -108,6 +108,7 @@ class App extends Component {
   componentDidMount() {
     const color = ranCol();
     document.getElementById('top').style.backgroundColor = color;
+    document.title = 'Online Omnichord';
   }
 
   /*** Setup functions ***/

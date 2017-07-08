@@ -4,6 +4,7 @@ import './css/Info.css';
 
 // This component is entirely HTML and CSS.
 export default function Info(props) {
+  document.title = 'Online Omnichord';
   window.onkeydown = undefined; // disable instrument on this page
   window.onkeyup = undefined;
   document.body.margin = 0;
