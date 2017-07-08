@@ -82,7 +82,8 @@ export default function Info(props) {
         <br/>
         I sampled all the sounds from my OM27. The chords have some high frequencies
         filtered out to cut down on the buzzing (although there's still a bit left).
-        You can download the sounds TODO PUT LINK.
+        You can download the sounds&nbsp;
+        <a href='https://drive.google.com/open?id=0B1msnJF9MDkSLXJEcDRjY3lNcTA'>here</a>.
         <br/>
         <br/>
         <b>Supported Browsers</b>
