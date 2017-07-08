@@ -16,7 +16,6 @@ const KnobType = {
   R_TEMPO: 'rhythm_tempo',
 }
 
-// TODO: use ogg instead of wav
 class App extends Component {
   constructor() {
     super();
@@ -91,7 +90,6 @@ class App extends Component {
 
   initRhythms(startVolume, pathToAudio) {
     // Initialize rhythm array
-    // TODO: use different rhythms
     const rhythmNames = ['rock', 'waltz', 'slowrock', 'latin', 'foxtrot', 'swing'];
     const rhythmPaths = rhythmNames.map(s => `./rhythm/${s}.ogg`);
     this.rhythms = rhythmPaths.map(p => {
@@ -157,15 +155,17 @@ class App extends Component {
   // and we will have two copies of w playing: the original one and the second
   // one.
   fadeOut(audio) {
-    audio.fade(1.0, 0.0, 50);
+    audio.fade(1.0, 0.0, 10);
   }
 
   fadeIn(audio) {
-    audio.fade(0.05, 1.0, 50);
+    audio.fade(0.05, 1.0, 10);
   }
 
   stopChord() {
-    if (this.currentChord && this.currentChord.volume() > 0) {
+    // Last boolean: we don't want to double stop when we quickly release a key
+    // and press a new one
+    if (this.currentChord && this.currentChord.volume() > 0 && this.getCurrentKey()) {
       this.fadeOut(this.currentChord);
     }
     this.setState({ chords: this.getNewChords('invalid key')}); // pass in an invalid key to deselect everything
