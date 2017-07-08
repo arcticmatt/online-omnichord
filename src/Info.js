@@ -78,6 +78,12 @@ export default function Info(props) {
             strumplate. It stops all currently playing sounds.
           </li>
         </ul>
+        <b>Sounds</b>
+        <br/>
+        I sampled all the sounds from my OM27. The chords have some high frequencies
+        filtered out to cut down on the buzzing (although there's still a bit left).
+        You can download the sounds TODO PUT LINK.
+        <br/>
         <br/>
         <b>Supported Browsers</b>
         <ul>

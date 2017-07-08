@@ -321,7 +321,7 @@ class App extends Component {
     }
     this.stopRhythm(); // stop current rhythm
     const newRhythm = this.rhythms[index];
-    newRhythm.volume(this.rhythmVolume);
+    newRhythm.volume = this.rhythmVolume;
     newRhythm.play();
     this.currentRhythm = newRhythm;
   }
