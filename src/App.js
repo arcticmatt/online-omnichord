@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import ButtonSpace from './ButtonSpace';
 import TouchBar from './TouchBar';
 import { Link } from 'react-router-dom';
+import { Howl } from 'howler';
 import './css/App.css';
 import './css/Led.css';
 
@@ -62,8 +63,16 @@ class App extends Component {
     // to each audio object to make it loop.
     // TODO: right now, only the g-chord is supported
     this.chordSoundMap = _.zipObject(chords, chords.map(c => {
-      const a = new Audio(pathToAudio(this.chordPath('g'))) // TODO: remove hardcoded g
-      return this.loopAudio(a);
+      const a = new Howl({
+        src: pathToAudio(this.chordPath(c)),
+        loop: true,
+        onfade: function(songid) {
+          if (this.volume() === 0) {
+            this.stop(songid);
+          }
+        }
+      });
+      return a;
     }));
   }
 
@@ -82,7 +91,7 @@ class App extends Component {
     this.rhythms = rhythmPaths.map(p => {
       const a = new Audio(pathToAudio(p));
       a.volume = startVolume;
-      return this.loopAudio(a);
+      return a;
     });
     this.rhythms[0].play();
   }
@@ -96,7 +105,7 @@ class App extends Component {
 
   /*** Setup functions ***/
   chordPath(chord) {
-    return `./${chord}/${chord}-chord.wav`;
+    return `./${chord}/${chord}-chord.ogg`;
   }
 
   notePaths(note) {
@@ -112,19 +121,6 @@ class App extends Component {
   /* Helper function that determines if a key is a valid touch bar key */
   isValidTouchKey(key) {
     return (key in _.range(10) || key === '-' || key === '=');
-  }
-
-  stopSound(a) {
-    a.pause();
-    a.currentTime = 0;
-  }
-
-  loopAudio(a) {
-    a.addEventListener('ended', function() {
-      this.currentTime = 0;
-      this.play();
-    }, false);
-    return a;
   }
 
   getNewChords(newKey) {
@@ -143,9 +139,25 @@ class App extends Component {
     return _.findKey(this.state.chords, x => x === 1);
   }
 
+  // Make these values small, so that we can't "double play" a chord.
+  // I was running into the following problem.
+  // 1) Play w key
+  // 2) Super quickly play q followed by w
+  // If these values are too high, then the initial w key sound will not
+  // fade out before playing again. Thus, the onfade will not be triggered,
+  // and we will have two copies of w playing: the original one and the second
+  // one.
+  fadeOut(audio) {
+    audio.fade(1.0, 0.0, 50);
+  }
+
+  fadeIn(audio) {
+    audio.fade(0.05, 1.0, 50);
+  }
+
   stopChord() {
-    if (this.currentChord) {
-      this.stopSound(this.currentChord);
+    if (this.currentChord && this.currentChord.volume() > 0) {
+      this.fadeOut(this.currentChord);
     }
     this.setState({ chords: this.getNewChords('invalid key')}); // pass in an invalid key to deselect everything
   }
@@ -161,7 +173,7 @@ class App extends Component {
   }
 
   changeParam(param, change, knobType, min=0.0, max=1.0) {
-    if (KnobType.R_TEMPO) {
+    if (knobType === KnobType.R_TEMPO) {
       min = .5;
       max = 2.0;
     }
@@ -212,12 +224,14 @@ class App extends Component {
     // Play new chord
     const newChord = this.keyChordMap[newKey]
     const newAudio = this.chordSoundMap[newChord];
-    newAudio.volume = this.chordVolume;
-    newAudio.play();
 
     // Update state and other variables
     this.currentChord = newAudio;
     this.setState({ chords: this.getNewChords(newKey) });
+
+    newAudio.volume(0.05); // start at zero to fade in
+    newAudio.play();
+    this.fadeIn(newAudio);
   }
 
   handleTouch(touchKey) {
@@ -259,13 +273,13 @@ class App extends Component {
     switch (knobType) {
       case KnobType.C_VOLUME:
         if (this.currentChord) {
-          this.currentChord.volume = newParam;
+          this.currentChord.volume(newParam);
         }
         this.chordVolume = newParam;
         break;
       case KnobType.R_VOLUME:
         if (this.currentRhythm) {
-          this.currentRhythm.volume = newParam;
+          this.currentRhythm.volume(newParam);
         }
         this.rhythmVolume = newParam;
         break;
