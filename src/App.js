@@ -11,6 +11,7 @@ const TOUCH_BAR_LENGTH = 12;
 
 const KnobType = {
   C_VOLUME: 'chord_volume',
+  H_VOLUME: 'harp_volume',
   R_VOLUME: 'rhythm_volume',
   R_TEMPO: 'rhythm_tempo',
 }
@@ -34,7 +35,7 @@ class App extends Component {
 
     // Initialize all the sound stuff
     this.initChords(keys, chords, pathToAudio);
-    this.initTouchBar(pathToAudio);
+    this.initTouchBar(chords, pathToAudio);
     this.initRhythms(rhythmStartVolume, pathToAudio);
 
     // Initialize non-state variables
@@ -61,7 +62,6 @@ class App extends Component {
 
     // Map each chord to its corresponding audio file, and add an event listener
     // to each audio object to make it loop.
-    // TODO: right now, only the g-chord is supported
     this.chordSoundMap = _.zipObject(chords, chords.map(c => {
       const a = new Howl({
         src: pathToAudio(this.chordPath(c)),
@@ -76,11 +76,17 @@ class App extends Component {
     }));
   }
 
-  initTouchBar(pathToAudio) {
-    // TODO: add other notes using zipobject and map
-    this.touchBarMap = {
-      g: _.zipObject(_.range(12), this.notePaths('g').map(p => pathToAudio(p))),
-    };
+  initTouchBar(chords, pathToAudio) {
+    // NOTE: unlike initChords, we have too many sounds to immediately load
+    // Looks like
+    // {
+    //   c: {1: howl, 2: howl...}
+    //   g: {1: howl, 2: howl...}
+    //   ...
+    // }
+    this.touchBarMap = _.zipObject(chords, chords.map(c => {
+      return _.zipObject(_.range(12), this.notePaths(c).map(p => pathToAudio(p)));
+    }));
   }
 
   initRhythms(startVolume, pathToAudio) {
@@ -109,7 +115,7 @@ class App extends Component {
   }
 
   notePaths(note) {
-    return _.range(12).map(num => `./${note}/${note}${num}.wav`);
+    return _.range(12).map(num => `./${note}/${note}${num}.ogg`);
   }
 
   /*** Helper functions ***/
@@ -235,13 +241,18 @@ class App extends Component {
   }
 
   handleTouch(touchKey) {
+    const currentKey = this.getCurrentKey();
+    // Touch bar is enabled after first chord press
+    if (!currentKey) {
+      return;
+    }
     // Get new bar position
     const position = '1234567890-='.split('').indexOf(touchKey);
     const newBarSelect = Array(TOUCH_BAR_LENGTH).fill(0);
     newBarSelect[position] = 1;
 
-    // Play new bar sound
-    const newAudio = new Audio(this.touchBarMap.g[position]);
+    // Play new bar sound. We don't need to loop, so just use regular audio
+    const newAudio = new Audio(this.touchBarMap[this.keyChordMap[currentKey]][position]);
     newAudio.volume = this.harpVolume;
     newAudio.play();
 
@@ -336,12 +347,12 @@ class App extends Component {
                 <li>
                   <button
                     className='leftButton firstDownButton greyBg'
-                    onClick={() => this.harpVolume = this.changeVolume(this.harpVolume, -0.1)}>
+                    onClick={() => this.harpVolume = this.changeParam(this.harpVolume, -0.1, KnobType.H_VOLUME)}>
                     -
                   </button>
                   <button
                     className='leftButton upButton greyBg'
-                    onClick={() => this.harpVolume = this.changeVolume(this.harpVolume, 0.1)}>
+                    onClick={() => this.harpVolume = this.changeParam(this.harpVolume, 0.1, KnobType.H_VOLUME)}>
                     +
                   </button>
                   <button

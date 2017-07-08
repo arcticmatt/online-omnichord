@@ -32,9 +32,12 @@ export default function Info(props) {
           </li>
           <li>
             <i>Harp/Strumplate</i>. You can play harp sounds by using the row of keys <i>1234...-+</i>.
-            These sounds will be in the same key as the
-            currently playing chord, or the same key as the last played chord if
-            memory is off. <i>1</i> plays the lowest note, and <i>+</i> the highest.
+            The currently playing chord, or last played chord if memory is off,
+            determines the pitch of the harp sounds. For example, if Eb major
+            is the current chord, then the harp sounds will be one of Eb, G,
+            and Bb. There are two main styles of playing the strumplate. You can
+            either play individual notes (like a piano) or "strum" it by
+            sliding your finger over the keys (like a guitar).
           </li>
           <li>
             <i>Rhythm</i>. The rhythm's volume is 0 by default. You can increase the
