@@ -89,7 +89,7 @@ export default function Info(props) {
         <b>Supported Browsers</b>
         <ul>
           <li>Chrome</li>
-          <li>Firefox</li>
+          <li>Firefox (sounds are more clicky)</li>
           <li>Definitely not Safari</li>
           <li>???</li>
         </ul>
