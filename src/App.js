@@ -111,6 +111,11 @@ class App extends Component {
     document.title = 'Online Omnichord';
   }
 
+  // when we switch to the info page, we need to stop all the sounds
+  componentWillUnmount() {
+    this.handleStopButton();
+  }
+
   /*** Setup functions ***/
   chordPath(chord) {
     return `./${chord}/${chord}-chord.ogg`;
@@ -157,7 +162,7 @@ class App extends Component {
   }
 
   stopBar() {
-    _.forEach(this.barAudio, a => a.pause());
+    _.forEach(this.barAudio, a => a.stop());
   }
 
   stopRhythm() {
@@ -310,7 +315,7 @@ class App extends Component {
     }
     this.stopRhythm(); // stop current rhythm
     const newRhythm = this.rhythms[index];
-    newRhythm.volume = this.rhythmVolume;
+    newRhythm.volume(this.rhythmVolume);
     newRhythm.play();
     this.currentRhythm = newRhythm;
   }
