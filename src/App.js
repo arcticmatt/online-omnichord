@@ -147,27 +147,11 @@ class App extends Component {
     return _.findKey(this.state.chords, x => x === 1);
   }
 
-  // Make these values small, so that we can't "double play" a chord.
-  // I was running into the following problem.
-  // 1) Play w key
-  // 2) Super quickly play q followed by w
-  // If these values are too high, then the initial w key sound will not
-  // fade out before playing again. Thus, the onfade will not be triggered,
-  // and we will have two copies of w playing: the original one and the second
-  // one.
-  fadeOut(audio) {
-    audio.fade(1.0, 0.0, 10);
-  }
-
-  fadeIn(audio) {
-    audio.fade(0.05, 1.0, 10);
-  }
-
   stopChord() {
     // Last boolean: we don't want to double stop when we quickly release a key
     // and press a new one
     if (this.currentChord && this.currentChord.volume() > 0 && this.getCurrentKey()) {
-      this.fadeOut(this.currentChord);
+      this.currentChord.fade(this.chordVolume, 0.0, 10);
     }
     this.setState({ chords: this.getNewChords('invalid key')}); // pass in an invalid key to deselect everything
   }
@@ -239,9 +223,9 @@ class App extends Component {
     this.currentChord = newAudio;
     this.setState({ chords: this.getNewChords(newKey) });
 
-    newAudio.volume(0.05); // start at zero to fade in
+    newAudio.volume(0.01); // start at zero to fade in
     newAudio.play();
-    this.fadeIn(newAudio);
+    newAudio.fade(0.01, this.chordVolume, 10);
   }
 
   handleTouch(touchKey) {
