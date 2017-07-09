@@ -256,9 +256,13 @@ class App extends Component {
     newBarSelect[position] = 1;
 
     // Play new bar sound. We don't need to loop, so just use regular audio
-    const newAudio = new Audio(this.touchBarMap[this.keyChordMap[currentKey]][position]);
-    newAudio.volume = this.harpVolume;
+    // const newAudio = new Audio(this.touchBarMap[this.keyChordMap[currentKey]][position]);
+    const newAudio = new Howl({
+      src: this.touchBarMap[this.keyChordMap[currentKey]][position],
+    });
+    newAudio.volume(0.05);
     newAudio.play();
+    newAudio.fade(0.05, this.harpVolume, 5);
 
     // Update state and other variables
     this.barAudio.push(newAudio);
