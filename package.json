@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "howler": "^2.0.4",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.19",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-router-dom": "^4.1.1",
