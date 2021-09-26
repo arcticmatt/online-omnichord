@@ -1,6 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import './css/Info.css';
+
+import { Link } from 'react-router-dom';
+import React from 'react';
 
 // This component is entirely HTML and CSS.
 export default function Info(props) {
@@ -102,6 +103,9 @@ export default function Info(props) {
           <li><a href='https://www.youtube.com/watch?v=O9dkI0mxk3k'>Strokes cover</a></li>
           <li><a href='https://www.youtube.com/watch?v=odQu6MSawOo'>Guy goes ham on omnichord live</a></li>
         </ul>
+        <b>About Me</b>
+        <br/>
+        Questions? Feedback? Say hi at <a href="https://twitter.com/pencilflip">https://twitter.com/pencilflip</a>.
       </div>
       <br/>
       <div id='sourceContainer'>
