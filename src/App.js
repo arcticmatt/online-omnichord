@@ -193,9 +193,7 @@ class App extends Component {
     if (this.isValidChordKey(e.key) && !this.memory && this.getCurrentKey() === e.key) {
       this.stopChord();
     } else if (this.isValidTouchKey(e.key) && upPosition === currentPosition) { // again, second boolean handles double stopping
-      this.setState({
-        barSelect: Array(TOUCH_BAR_LENGTH).fill(0),
-      });
+      this.deactivateNoteVisualState()
     }
   }
 
@@ -233,16 +231,12 @@ class App extends Component {
     newAudio.fade(0.01, this.chordVolume, 10);
   }
 
-  handleTouch(touchKey) {
+  handleTouchIdx(position) {
     const currentKey = this.getCurrentKey();
     // Touch bar is enabled after first chord press
     if (!currentKey) {
       return;
     }
-    // Get new bar position
-    const position = '1234567890-='.split('').indexOf(touchKey);
-    const newBarSelect = Array(TOUCH_BAR_LENGTH).fill(0);
-    newBarSelect[position] = 1;
 
     // Play new bar sound. We don't need to loop, so just use regular audio
     // const newAudio = new Audio(this.touchBarMap[this.keyChordMap[currentKey]][position]);
@@ -258,6 +252,23 @@ class App extends Component {
     if (this.barAudio.length > TOUCH_BAR_LENGTH * 2) {
       this.barAudio.shift(); // enforce max length
     }
+    this.setActiveNoteVisualState(position);
+  }
+
+  handleTouch(touchKey) {
+    // Get new bar position
+    const position = '1234567890-='.split('').indexOf(touchKey);
+    this.handleTouchIdx(position);
+  }
+
+  setActiveNoteVisualState(index) {
+    const newBarSelect = Array(TOUCH_BAR_LENGTH).fill(0);
+    newBarSelect[index] = 1;
+    this.setState({ barSelect: newBarSelect })
+  }
+
+  deactivateNoteVisualState(index) {
+    const newBarSelect = Array(TOUCH_BAR_LENGTH).fill(0);
     this.setState({ barSelect: newBarSelect })
   }
 
@@ -392,7 +403,12 @@ class App extends Component {
             <div id='oLogo'></div>
           </div>
           <div id='barContainer'>
-            <div id='barSpace' className='clearBg'><TouchBar barSelect={this.state.barSelect} /></div>
+            <div id='barSpace' className='clearBg'>
+              <TouchBar
+                barSelect={this.state.barSelect}
+                activateBar={this.handleTouchIdx.bind(this)}
+                deactivateBar={this.deactivateNoteVisualState.bind(this)}
+                /></div>
             <div className='stopBar clearBg'><button className='stopButton' onClick={() => this.handleStopButton()}></button></div>
           </div>
           <div id='speaker'></div>
