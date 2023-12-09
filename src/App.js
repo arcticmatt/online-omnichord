@@ -16,6 +16,82 @@ const KnobType = {
   R_TEMPO: 'rhythm_tempo',
 }
 
+ const harpKeys = '1234567890-='; 
+    const keys = 'qwertyuioasdfghjklzxcvbnm,.';
+
+	
+	
+	//REF: https://www.smashingmagazine.com/2018/03/web-midi-api/  & https://www.keithmcmillen.com/blog/making-music-in-the-browser-web-midi-api/   &     https://jsfiddle.net/KeithMcMillenInstruments/upae79bu/   &   https://codepen.io/Rumyra/pen/NxdbzL
+var midi, mididata, isMidiLaunched; 
+ function launchMidiConnect()
+{
+if(!isMidiLaunched && window.location === window.parent.location){ // not in iframe
+isMidiLaunched=true; 		console.log("Midi launched.")
+
+// request MIDI access
+if (navigator.requestMIDIAccess) {
+    navigator.requestMIDIAccess({
+        sysex: false // this defaults to 'false' and we won't be covering sysex in this article. 
+    }).then(onMIDISuccess, onMIDIFailure);
+} else {
+    console.log("No MIDI support in your browser.");
+}
+function onMIDISuccess(midiAccess) {
+    // when we get a succesful response, run this code
+    console.log('MIDI Access Object', midiAccess);
+	
+	    midi = midiAccess; // this is our raw MIDI data, inputs, outputs, and sysex status
+
+    var inputs = midi.inputs.values();
+    // loop over all available inputs and listen for any MIDI input
+    for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
+        // each time there is a midi message call the onMIDIMessage function
+        input.value.onmidimessage = onMIDIMessage;
+    }
+
+}
+
+function onMIDIFailure(e) {
+    // when we get a failed response, run this code
+    console.log("No access to MIDI devices or your browser doesn't support WebMIDI API. Please use WebMIDIAPIShim " + e);
+}
+function onMIDIMessage(message) {
+ 	if( typeof message != "undefined"){
+		console.log(message)
+  var  mididata = message.data; // this gives us our [command/channel, note, velocity] data.
+  var   cmd = mididata[0] >> 4,
+     channel = mididata[0] & 0xf,
+     type = mididata[0] & 0xf0, // channel agnostic message type. Thanks, Phil Burk.
+     noteMidi = mididata[1], // noteMidi here is the the notenumber (59, 60, ....)
+     velocity = mididata[2];
+ 		console.log(noteMidi)
+
+	if(noteMidi < 13){ // hard has no more than 12 notes
+    switch (type) {
+        case 144: // noteOn message 
+
+		
+			console.log(harpKeys[noteMidi]);
+	var keyToPlay=harpKeys[noteMidi];
+  window.dispatchEvent(new KeyboardEvent('keydown',{'key':keyToPlay}));
+   setTimeout(function(){  window.dispatchEvent(new KeyboardEvent('keyup',{'key':keyToPlay}));}, 250);
+
+		
+		
+		
+		
+             break;
+        case 128: // noteOff message 
+
+            break;
+    }
+}
+ }
+}
+}
+}
+ 
+	
 class App extends Component {
   constructor() {
     super();
@@ -23,9 +99,9 @@ class App extends Component {
     // Key events
     window.onkeydown = e => this.handleDown(e);
     window.onkeyup = e => this.handleUp(e);
+	launchMidiConnect();
 
     // Needed to initialize the sounds
-    const keys = 'qwertyuioasdfghjklzxcvbnm,.';
     const chords = ['eb', 'bb', 'f', 'c', 'g', 'd', 'a', 'e', 'b',
       'ebm', 'bbm', 'fm', 'cm', 'gm', 'dm', 'am', 'em', 'bm',
       'eb7', 'bb7', 'f7', 'c7', 'g7', 'd7', 'a7', 'e7', 'b7'];
@@ -183,7 +259,7 @@ class App extends Component {
 
   /*** Handler functions ***/
   handleUp(e) {
-    const upPosition = '1234567890-='.split('').indexOf(e.key);
+    const upPosition = harpKeys.split('').indexOf(e.key);
     const currentPosition = this.state.barSelect.indexOf(1);
     // Last boolean handles case where
     // 1) User plays chord 'g' (WLOG)
@@ -212,10 +288,10 @@ class App extends Component {
   }
 
   handleChord(newKey) {
-    const currentKey = this.getCurrentKey();
+ /*   const currentKey = this.getCurrentKey();  
     if (currentKey === newKey) {
-      return; // If current key is pressed again, don't pause/stop the sound
-    }
+      return; // If current key is pressed again, don't pause/stop the sound => disagree (thinking about the pitch shift slider)  - Jonathan N. 12/04/2022
+    }*/
 
     // Stop currently playing chord
     this.stopChord();
@@ -229,6 +305,7 @@ class App extends Component {
     this.setState({ chords: this.getNewChords(newKey) });
 
     newAudio.volume(0.01); // start at zero to fade in
+	  newAudio.rate(document.getElementById('iRangeButtonSpace').value);//2); 
     newAudio.play();
     newAudio.fade(0.01, this.chordVolume, 10);
   }
@@ -240,7 +317,7 @@ class App extends Component {
       return;
     }
     // Get new bar position
-    const position = '1234567890-='.split('').indexOf(touchKey);
+    const position = harpKeys.split('').indexOf(touchKey);
     const newBarSelect = Array(TOUCH_BAR_LENGTH).fill(0);
     newBarSelect[position] = 1;
 
@@ -250,6 +327,7 @@ class App extends Component {
       src: this.touchBarMap[this.keyChordMap[currentKey]][position],
     });
     newAudio.volume(0.05);
+   newAudio.rate(document.getElementById('iRangeTouchBar').value)//1);//0.2); REF: http://www.npmdoc.org/howlerzhongwenwendanghowler-jszhongwenjiaochengjiexi.html
     newAudio.play();
     newAudio.fade(0.05, this.harpVolume, 5);
 

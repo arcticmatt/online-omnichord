@@ -1,5 +1,19 @@
 /* I like this https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
 
+input[type=range][orient=vertical]/*REF: https://stackoverflow.com/questions/15935837/how-to-display-a-range-input-slider-vertically */
+{
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* Chromium */
+    width: 8px;
+    height: 175px;
+    padding: 0 5px;
+}
+input[type=range]
+{
+accent-color: #dcdcdc;
+}
+#iRangeTouchBar{z-index:99999;position: absolute;margin-left:95%;  }
+ 
 /*** Parents ***/
 /* Contains parent */
 #top {
