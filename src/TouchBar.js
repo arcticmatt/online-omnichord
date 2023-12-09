@@ -23,5 +23,7 @@ function TouchBarItem(props) {
     style={{backgroundColor: color}}
     onMouseEnter={() => props.activateBar(props.barNumber)}
     onMouseLeave={() => props.deactivateBar()}
+    onTouchStart={() => props.activateBar(props.barNumber)}
+    onTouchEnd={() => props.deactivateBar()}
     />);
 }
