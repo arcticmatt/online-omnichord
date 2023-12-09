@@ -183,10 +183,11 @@ class App extends Component {
 
   /*** Handler functions ***/
   handleUp(e) {
+    const upPosition = '1234567890-='.split('').indexOf(e.key);
     if (this.isValidChordKey(e.key)) {
       this.handleChordUp(e.key);
     } else if (this.isValidTouchKey(e.key)) {
-      this.deactivateNoteVisualState(e.key)
+      this.deactivateNoteVisualState(upPosition)
     }
   }
 
@@ -271,11 +272,10 @@ class App extends Component {
     this.setState({ barSelect: newBarSelect })
   }
 
-  deactivateNoteVisualState(key) {
-    const upPosition = '1234567890-='.split('').indexOf(key);
+  deactivateNoteVisualState(keyIndex) {
     const currentPosition = this.state.barSelect.indexOf(1);
     // Avoid double stopping.
-    if (upPosition === currentPosition) {
+    if (keyIndex === currentPosition) {
       const newBarSelect = Array(TOUCH_BAR_LENGTH).fill(0);
       this.setState({ barSelect: newBarSelect })
     }
