@@ -183,17 +183,10 @@ class App extends Component {
 
   /*** Handler functions ***/
   handleUp(e) {
-    const upPosition = '1234567890-='.split('').indexOf(e.key);
-    const currentPosition = this.state.barSelect.indexOf(1);
-    // Last boolean handles case where
-    // 1) User plays chord 'g' (WLOG)
-    // 2) User, while still playing chord 'g', plays chord 'c'
-    // 3) When chord 'c' is played, chord 'g' is stopped. So we don't want to
-    //    double stop it here.
-    if (this.isValidChordKey(e.key) && !this.memory && this.getCurrentKey() === e.key) {
-      this.stopChord();
-    } else if (this.isValidTouchKey(e.key) && upPosition === currentPosition) { // again, second boolean handles double stopping
-      this.deactivateNoteVisualState()
+    if (this.isValidChordKey(e.key)) {
+      this.handleChordUp(e.key);
+    } else if (this.isValidTouchKey(e.key)) {
+      this.deactivateNoteVisualState(e.key)
     }
   }
 
@@ -207,6 +200,17 @@ class App extends Component {
       this.handleTouch(e.key);
     }
     // don't do anything if an invalid key was pressed
+  }
+
+  handleChordUp(key) {
+    // Last boolean handles case where
+    // 1) User plays chord 'g' (WLOG)
+    // 2) User, while still playing chord 'g', plays chord 'c'
+    // 3) When chord 'c' is played, chord 'g' is stopped. So we don't want to
+    //    double stop it here.
+    if (!this.memory && this.getCurrentKey() === key) {
+      this.stopChord();
+    }
   }
 
   handleChord(newKey) {
@@ -267,9 +271,14 @@ class App extends Component {
     this.setState({ barSelect: newBarSelect })
   }
 
-  deactivateNoteVisualState(index) {
-    const newBarSelect = Array(TOUCH_BAR_LENGTH).fill(0);
-    this.setState({ barSelect: newBarSelect })
+  deactivateNoteVisualState(key) {
+    const upPosition = '1234567890-='.split('').indexOf(key);
+    const currentPosition = this.state.barSelect.indexOf(1);
+    // Avoid double stopping.
+    if (upPosition === currentPosition) {
+      const newBarSelect = Array(TOUCH_BAR_LENGTH).fill(0);
+      this.setState({ barSelect: newBarSelect })
+    }
   }
 
   handleStopButton() {
@@ -399,7 +408,13 @@ class App extends Component {
             </div>
           </div>
           <div id='oBody'>
-            <div id='buttonSpace'><ButtonSpace keys={_.keys(this.keyChordMap)} chords={this.state.chords} /></div>
+            <div id='buttonSpace'>
+              <ButtonSpace
+                keys={_.keys(this.keyChordMap)}
+                chords={this.state.chords}
+                chordSelector={this.handleChord.bind(this)}
+                chordDeselector={this.handleChordUp.bind(this)} />
+            </div>
             <div id='oLogo'></div>
           </div>
           <div id='barContainer'>
@@ -407,8 +422,8 @@ class App extends Component {
               <TouchBar
                 barSelect={this.state.barSelect}
                 activateBar={this.handleTouchIdx.bind(this)}
-                deactivateBar={this.deactivateNoteVisualState.bind(this)}
-                /></div>
+                deactivateBar={this.deactivateNoteVisualState.bind(this)} />
+            </div>
             <div className='stopBar clearBg'><button className='stopButton' onClick={() => this.handleStopButton()}></button></div>
           </div>
           <div id='speaker'></div>
