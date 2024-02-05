@@ -27,7 +27,7 @@ function ButtonRow(props) {
   const keyRow = keys.slice(begin, end);
 
   const buttons = keyRow.map(key => <ChordButton key={key} chordKey={key} chords={props.chords} />);
-  return <li className='buttonLi' style={{marginLeft: MARGINS[row]}}>{buttons}</li>;
+  return <li className='buttonLi' style={{ marginLeft: MARGINS[row] }}>{buttons}</li>;
 }
 
 function ChordButton(props) {
@@ -40,8 +40,9 @@ function ChordButton(props) {
 
   return (
     <button
-      style={{backgroundColor: color}}
-    className='chordButton'>
+      style={{ backgroundColor: color }}
+      className='chordButton'>
+        {chordKey}
     </button>
   );
 }
