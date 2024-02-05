@@ -10,9 +10,9 @@ export default function ButtonSpace(props) {
       <div id='buttonDiv'>
         <ul className='hideUL'>
           <li id='dummyLi'></li>
-          <ButtonRow keys={props.keys} chords={props.chords} row={0} />
-          <ButtonRow keys={props.keys} chords={props.chords} row={1} />
-          <ButtonRow keys={props.keys} chords={props.chords} row={2} />
+          <ButtonRow keys={props.keys} chords={props.chords} row={0} chordSelector={props.chordSelector} chordDeselector={props.chordDeselector} />
+          <ButtonRow keys={props.keys} chords={props.chords} row={1} chordSelector={props.chordSelector} chordDeselector={props.chordDeselector} />
+          <ButtonRow keys={props.keys} chords={props.chords} row={2} chordSelector={props.chordSelector} chordDeselector={props.chordDeselector} />
         </ul>
       </div>
     </ul>
@@ -26,7 +26,12 @@ function ButtonRow(props) {
   const end = begin + NUM_BUTTONS;
   const keyRow = keys.slice(begin, end);
 
-  const buttons = keyRow.map(key => <ChordButton key={key} chordKey={key} chords={props.chords} />);
+  const buttons = keyRow.map(key => <ChordButton
+      key={key}
+      chordKey={key}
+      chords={props.chords}
+      chordSelector={props.chordSelector}
+      chordDeselector={props.chordDeselector} />);
   return <li className='buttonLi' style={{marginLeft: MARGINS[row]}}>{buttons}</li>;
 }
 
@@ -41,6 +46,10 @@ function ChordButton(props) {
   return (
     <button
       style={{backgroundColor: color}}
+      onMouseDown={() => props.chordSelector(props.chordKey)}
+      onTouchStart={() => props.chordSelector(props.chordKey)}
+      onMouseUp={() => props.chordDeselector(props.chordKey)}
+      onTouchEnd={() => props.chordDeselector(props.chordKey)}
     className='chordButton'>
     </button>
   );

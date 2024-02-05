@@ -4,7 +4,12 @@ import './css/TouchBar.css';
 
 export default function TouchBar(props) {
   const items = _.rangeRight(12).map(num =>
-    <TouchBarItem key={num} barSelect={props.barSelect} barNumber={num} />);
+    <TouchBarItem
+      key={num}
+      barSelect={props.barSelect}
+      barNumber={num}
+      activateBar={props.activateBar}
+      deactivateBar={props.deactivateBar} />);
   return (<ul id="touchBarUL" className='hideUL'>{items}</ul>);
 }
 
@@ -13,10 +18,12 @@ function TouchBarItem(props) {
   if (props.barSelect[props.barNumber]) {
     color = 'red';
   }
-
-  if (props.barNumber === 0) {
-    return <li className='firstBarItem' style={{backgroundColor: color}}></li>;
-  } else {
-    return <li style={{backgroundColor: color}}></li>;
-  }
+  return (<li
+    className={props.barNumber === 0 && 'firstBarItem'}
+    style={{backgroundColor: color}}
+    onMouseEnter={() => props.activateBar(props.barNumber)}
+    onTouchStart={() => props.activateBar(props.barNumber)}
+    onMouseLeave={() => props.deactivateBar(props.barNumber)}
+    onTouchEnd={() => props.deactivateBar(props.barNumber)}
+    />);
 }

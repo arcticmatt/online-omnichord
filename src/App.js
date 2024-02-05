@@ -184,18 +184,10 @@ class App extends Component {
   /*** Handler functions ***/
   handleUp(e) {
     const upPosition = '1234567890-='.split('').indexOf(e.key);
-    const currentPosition = this.state.barSelect.indexOf(1);
-    // Last boolean handles case where
-    // 1) User plays chord 'g' (WLOG)
-    // 2) User, while still playing chord 'g', plays chord 'c'
-    // 3) When chord 'c' is played, chord 'g' is stopped. So we don't want to
-    //    double stop it here.
-    if (this.isValidChordKey(e.key) && !this.memory && this.getCurrentKey() === e.key) {
-      this.stopChord();
-    } else if (this.isValidTouchKey(e.key) && upPosition === currentPosition) { // again, second boolean handles double stopping
-      this.setState({
-        barSelect: Array(TOUCH_BAR_LENGTH).fill(0),
-      });
+    if (this.isValidChordKey(e.key)) {
+      this.handleChordUp(e.key);
+    } else if (this.isValidTouchKey(e.key)) {
+      this.deactivateNoteVisualState(upPosition)
     }
   }
 
@@ -209,6 +201,17 @@ class App extends Component {
       this.handleTouch(e.key);
     }
     // don't do anything if an invalid key was pressed
+  }
+
+  handleChordUp(key) {
+    // Last boolean handles case where
+    // 1) User plays chord 'g' (WLOG)
+    // 2) User, while still playing chord 'g', plays chord 'c'
+    // 3) When chord 'c' is played, chord 'g' is stopped. So we don't want to
+    //    double stop it here.
+    if (!this.memory && this.getCurrentKey() === key) {
+      this.stopChord();
+    }
   }
 
   handleChord(newKey) {
@@ -233,16 +236,12 @@ class App extends Component {
     newAudio.fade(0.01, this.chordVolume, 10);
   }
 
-  handleTouch(touchKey) {
+  handleTouchIdx(position) {
     const currentKey = this.getCurrentKey();
     // Touch bar is enabled after first chord press
     if (!currentKey) {
       return;
     }
-    // Get new bar position
-    const position = '1234567890-='.split('').indexOf(touchKey);
-    const newBarSelect = Array(TOUCH_BAR_LENGTH).fill(0);
-    newBarSelect[position] = 1;
 
     // Play new bar sound. We don't need to loop, so just use regular audio
     // const newAudio = new Audio(this.touchBarMap[this.keyChordMap[currentKey]][position]);
@@ -258,7 +257,28 @@ class App extends Component {
     if (this.barAudio.length > TOUCH_BAR_LENGTH * 2) {
       this.barAudio.shift(); // enforce max length
     }
+    this.setActiveNoteVisualState(position);
+  }
+
+  handleTouch(touchKey) {
+    // Get new bar position
+    const position = '1234567890-='.split('').indexOf(touchKey);
+    this.handleTouchIdx(position);
+  }
+
+  setActiveNoteVisualState(index) {
+    const newBarSelect = Array(TOUCH_BAR_LENGTH).fill(0);
+    newBarSelect[index] = 1;
     this.setState({ barSelect: newBarSelect })
+  }
+
+  deactivateNoteVisualState(keyIndex) {
+    const currentPosition = this.state.barSelect.indexOf(1);
+    // Avoid double stopping.
+    if (keyIndex === currentPosition) {
+      const newBarSelect = Array(TOUCH_BAR_LENGTH).fill(0);
+      this.setState({ barSelect: newBarSelect })
+    }
   }
 
   handleStopButton() {
@@ -388,11 +408,22 @@ class App extends Component {
             </div>
           </div>
           <div id='oBody'>
-            <div id='buttonSpace'><ButtonSpace keys={_.keys(this.keyChordMap)} chords={this.state.chords} /></div>
+            <div id='buttonSpace'>
+              <ButtonSpace
+                keys={_.keys(this.keyChordMap)}
+                chords={this.state.chords}
+                chordSelector={this.handleChord.bind(this)}
+                chordDeselector={this.handleChordUp.bind(this)} />
+            </div>
             <div id='oLogo'></div>
           </div>
           <div id='barContainer'>
-            <div id='barSpace' className='clearBg'><TouchBar barSelect={this.state.barSelect} /></div>
+            <div id='barSpace' className='clearBg'>
+              <TouchBar
+                barSelect={this.state.barSelect}
+                activateBar={this.handleTouchIdx.bind(this)}
+                deactivateBar={this.deactivateNoteVisualState.bind(this)} />
+            </div>
             <div className='stopBar clearBg'><button className='stopButton' onClick={() => this.handleStopButton()}></button></div>
           </div>
           <div id='speaker'></div>
